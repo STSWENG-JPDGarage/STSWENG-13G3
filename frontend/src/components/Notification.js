@@ -5,17 +5,16 @@ import CloseButton from 'react-bootstrap/CloseButton';
 
 const Notification = () => {
   return (
-    <Toast>
+    <Toast className='bg_card2-red'>
       <Toast.Body>
         <Row>
-          <Col><p className='txt-16 fw-bold'>Alpinestars SMX-1 Drystar Gloves</p></Col>
-          <Col class='w-auto'><CloseButton /></Col>
-          
+          <Col sm={10}><p className='txt-16 fw-bold'>Alpinestars SMX-1 Drystar Gloves</p></Col>
+          <Col sm={2} className='d-flex justify-content-end'><CloseButton /></Col>
         </Row>
-        <Row><p className='txt-14'>A customer has just placed an order for thi...</p></Row>
+        <Row ><p className='txt-14'>A customer has just placed an order for thi...</p></Row>
         <Row>
           <Col><p>2 hours ago</p></Col>
-          <Col class='w-auto'><img src="icon_cart_.png"/></Col>
+          <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>
         </Row>
       </Toast.Body>
     </Toast>
