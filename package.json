@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.0",
     "cors": "^2.8.5",
@@ -17,26 +15,5 @@
     "react-router-dom": "^6.20.0",
     "react-scripts": "^5.0.1",
     "validator": "^13.11.0"
-  },
-  "name": "stsweng-13g3",
-  "description": "Scrum Master - Leeroi Villamiel",
-  "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
-    "@babel/preset-react": "^7.23.3",
-    "babel-jest": "^29.7.0",
-    "jest": "^27.5.1",
-    "react-test-renderer": "^18.2.0"
-  },
-  "scripts": {
-    "test": "jest",
-    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\""
-  },
-
-  
-
-  "author": "",
-  "license": "ISC"
+  }
 }
