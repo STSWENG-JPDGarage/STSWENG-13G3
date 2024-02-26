@@ -63,6 +63,17 @@ const createInventoryItem = async (req, res) => {
     try {
 
         const inventoryItem = await InventoryItem.create({ partName, brand, motorModel, stockNumber, retailPrice, wholesalePrice })
+        
+        // update stock status
+        if (inventoryItem.stockNumber == 0) {
+            inventoryItem.stockStatus = 'Out of Stock';
+        } else if (inventoryItem.stockNumber <= 10) {
+            inventoryItem.stockStatus = 'Danger Zone';
+        } else {
+            inventoryItem.stockStatus = 'In Stock';
+        }
+        await inventoryItem.save();
+
         res.status(200).json(inventoryItem)
 
     } catch (error) {
