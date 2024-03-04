@@ -41,4 +41,4 @@ const notificationController = {
     }
 };
 
-module.exports = paymentReminderController;
+module.exports = notificationController;
