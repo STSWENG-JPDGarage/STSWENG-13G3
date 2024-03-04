@@ -1,4 +1,4 @@
-const notification = require('../models/notificationModel');
+const Notification = require('../models/notificationModel');
 const mongoose = require('mongoose')
 
 const notificationController = {
