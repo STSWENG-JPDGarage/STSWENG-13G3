@@ -8,6 +8,7 @@ const {
 
 router.get('/notifications-get', notificationController.getAllNotifications);
 router.post('/notifications-add', notificationController.addNotification);
+router.put('/notifications-update/:id', notificationController.updateNotification);
 router.delete('/notifications-delete/:id', notificationController.deleteNotification);
 
 module.exports = router;

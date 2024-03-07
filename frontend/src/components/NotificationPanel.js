@@ -6,7 +6,6 @@ import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
 
 const NotificationPanel = () => {
-  // BACKEND for fetching notifications
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
 
@@ -14,14 +13,15 @@ const NotificationPanel = () => {
     fetchNotifications();
   }, []);
 
+  // Fetches all non-archive and archive notifications
   const fetchNotifications = async () => {
     try {
       const response = await fetch(`${DOMAIN}/notification/notifications-get`);
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
-      const notificationsData = await response.json(); // Sort notifications (most recent first)
-      notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const notificationsData = await response.json(); 
+      notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
       const nonArchiveNotifications = notificationsData.filter(notification => notification.isArchive === "No");
       const archiveNotifications = notificationsData.filter(notification => notification.isArchive === "Yes");
       setNonArchiveNotifications(nonArchiveNotifications);
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
     }
   };
 
-  // Function to format time elapsed of notification
+  // Format "time elapsed" of the notification
   const formatTimeElapsed = (notificationDate) => {
     const currentTime = new Date();
     const timeDifference = currentTime - new Date(notificationDate);
@@ -51,6 +51,26 @@ const NotificationPanel = () => {
     }
   };
 
+  const handleCloseNotification = async (notificationId, currentIsArchive) => {
+    try {
+      const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
+      const response = await fetch(`${DOMAIN}/notification/notifications-update/${notificationId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isArchive: updatedIsArchive }) // Update isArchive status
+      });
+      if (!response.ok) {
+        throw new Error('Failed to close notification');
+      }
+      // Refetch notifications after closing
+      fetchNotifications();
+    } catch (error) {
+      console.error('Error closing notification:', error);
+    }
+  };
+
   // FRONTEND for notification panel
   return (
     <Container className='bg-white py-4'>
@@ -66,6 +86,8 @@ const NotificationPanel = () => {
             message={notification.message} 
             stockRemaining={notification.stockRemaining}
             timeElapsed={formatTimeElapsed(notification.date)}
+            isArchive={notification.isArchive}
+            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
           />
         ))}
       </Tab>
@@ -76,6 +98,8 @@ const NotificationPanel = () => {
             message={notification.message} 
             stockRemaining={notification.stockRemaining}
             timeElapsed={formatTimeElapsed(notification.date)}
+            isArchive={notification.isArchive}
+            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
             />
         ))}
       </Tab>

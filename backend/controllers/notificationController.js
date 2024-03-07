@@ -5,7 +5,6 @@ const notificationController = {
     // Controller function to fetch all notifications
     getAllNotifications: async (req, res) => {
         try {
-            // Retrieve all notifications from the database
             const notifications = await Notification.find();
             res.json(notifications);
         } catch (error) {
@@ -17,9 +16,7 @@ const notificationController = {
     // Controller function to add a new notification
     addNotification: async (req, res) => {
         try {
-            // Create a new notification based on the request body
             const newNotification = new Notification(req.body);
-            // Save the new notification to the database
             const savedNotification = await newNotification.save();
             res.status(201).json(savedNotification);
         } catch (error) {
@@ -28,10 +25,28 @@ const notificationController = {
         }
     },
 
+    // Controller function to update isArchive of a notification
+    updateNotification: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { isArchive } = req.body;
+
+            const updatedNotification = await Notification.findByIdAndUpdate(id, { isArchive }, { new: true });
+
+            if (!updatedNotification) {
+                return res.status(404).json({ error: 'Notification not found' });
+            }
+
+            res.json(updatedNotification);
+        } catch (error) {
+            console.error('Error updating notification:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
     // Controller function to delete a notification by ID
     deleteNotification: async (req, res) => {
         try {
-            // Find the notification by ID and delete it
             await Notification.findByIdAndDelete(req.params.id);
             res.sendStatus(204);
         } catch (error) {
