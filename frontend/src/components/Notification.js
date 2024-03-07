@@ -3,7 +3,7 @@ import {Row, Col} from 'react-bootstrap'
 import CloseButton from 'react-bootstrap/CloseButton';
 
 
-const Notification = ({ message, stockRemaining }) => {
+const Notification = ({ message, stockRemaining, timeElapsed }) => {
   return (
     <Toast className='bg_card2-red'>
       <Toast.Body>
@@ -13,7 +13,7 @@ const Notification = ({ message, stockRemaining }) => {
         </Row>
         <Row ><p className='txt-14'>Stock remaining: {stockRemaining}</p></Row>
         <Row>
-          <Col><p>2 hours ago</p></Col>
+          <Col><p>{timeElapsed}</p></Col>
           <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>
         </Row>
       </Toast.Body>

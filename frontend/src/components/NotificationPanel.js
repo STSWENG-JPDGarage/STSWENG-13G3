@@ -34,6 +34,26 @@ const NotificationPanel = () => {
     }
   };
 
+  // Function to format time elapsed of notification
+  const formatTimeElapsed = (notificationDate) => {
+    const currentTime = new Date();
+    const timeDifference = currentTime - new Date(notificationDate);
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+  
+    if (days > 0) {
+      return days === 1 ? '1 day ago' : `${days} days ago`;
+    } else if (hours > 0) {
+      return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    } else if (minutes > 0) {
+      return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+    } else {
+      return 'Just now';
+    }
+  };
+
   // FRONTEND for notification panel
   return (
     <Container className='bg-white py-4'>
@@ -44,12 +64,22 @@ const NotificationPanel = () => {
       justify>
       <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotificationCount}</Badge></span>}>
         {nonArchiveNotifications.map((notification, index) => (
-          <Notification key={index} message={notification.message} stockRemaining={notification.stockRemaining}/>
+          <Notification 
+            key={index} 
+            message={notification.message} 
+            stockRemaining={notification.stockRemaining}
+            timeElapsed={formatTimeElapsed(notification.date)}
+          />
         ))}
       </Tab>
       <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotificationCount}</Badge></span>}>
         {archiveNotifications.map((notification, index) => (
-          <Notification key={index} message={notification.message} stockRemaining={notification.stockRemaining}/>
+          <Notification 
+            key={index} 
+            message={notification.message} 
+            stockRemaining={notification.stockRemaining}
+            timeElapsed={formatTimeElapsed(notification.date)}
+            />
         ))}
       </Tab>
     </Tabs>
