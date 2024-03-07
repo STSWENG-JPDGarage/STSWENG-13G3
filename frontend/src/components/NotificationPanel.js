@@ -7,26 +7,30 @@ import React, { useState, useEffect } from 'react';
 
 const NotificationPanel = () => {
   // BACKEND for fetching notifications
+  const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
+  const [archiveNotifications, setArchiveNotifications] = useState([]);
   const [nonArchiveNotificationCount, setNonArchiveNotificationCount] = useState(0);
   const [archiveNotificationCount, setArchiveNotificationCount] = useState(0);
 
   useEffect(() => {
-    fetchNotificationsCount();
+    fetchNotifications();
   }, []);
 
-  const fetchNotificationsCount = async () => {
+  const fetchNotifications = async () => {
     try {
       const response = await fetch(`${DOMAIN}/notification/notifications-get`);
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
-      const notifications = await response.json();
-      const nonArchiveNotifications = notifications.filter(notification => notification.isArchive === "No");
-      const archiveNotifications = notifications.filter(notification => notification.isArchive === "Yes");
+      const notificationsData = await response.json();
+      const nonArchiveNotifications = notificationsData.filter(notification => notification.isArchive === "No");
+      const archiveNotifications = notificationsData.filter(notification => notification.isArchive === "Yes");
+      setNonArchiveNotifications(nonArchiveNotifications);
       setNonArchiveNotificationCount(nonArchiveNotifications.length);
-      setArchiveNotificationCount(archiveNotifications.length);
+      setArchiveNotifications(archiveNotifications);
+      setArchiveNotificationCount(archiveNotifications.length);      
     } catch (error) {
-      console.error('Error fetching notifications count:', error);
+      console.error('Error fetching notifications:', error);
     }
   };
 
@@ -39,15 +43,14 @@ const NotificationPanel = () => {
       className="mb-3 my-0 h-100"
       justify>
       <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotificationCount}</Badge></span>}>
-      <Notification/>
-      <Notification/>
-      <Notification/>
-      <Notification/>
-      <Notification/>
-      <Notification/>
+        {nonArchiveNotifications.map((notification, index) => (
+          <Notification key={index} message={notification.message} stockRemaining={notification.stockRemaining}/>
+        ))}
       </Tab>
       <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotificationCount}</Badge></span>}>
-        <Notification/>
+        {archiveNotifications.map((notification, index) => (
+          <Notification key={index} message={notification.message} stockRemaining={notification.stockRemaining}/>
+        ))}
       </Tab>
     </Tabs>
     </Container>
