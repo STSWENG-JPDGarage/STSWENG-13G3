@@ -9,8 +9,6 @@ const NotificationPanel = () => {
   // BACKEND for fetching notifications
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
-  const [nonArchiveNotificationCount, setNonArchiveNotificationCount] = useState(0);
-  const [archiveNotificationCount, setArchiveNotificationCount] = useState(0);
 
   useEffect(() => {
     fetchNotifications();
@@ -22,13 +20,12 @@ const NotificationPanel = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
-      const notificationsData = await response.json();
+      const notificationsData = await response.json(); // Sort notifications (most recent first)
+      notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date));
       const nonArchiveNotifications = notificationsData.filter(notification => notification.isArchive === "No");
       const archiveNotifications = notificationsData.filter(notification => notification.isArchive === "Yes");
       setNonArchiveNotifications(nonArchiveNotifications);
-      setNonArchiveNotificationCount(nonArchiveNotifications.length);
-      setArchiveNotifications(archiveNotifications);
-      setArchiveNotificationCount(archiveNotifications.length);      
+      setArchiveNotifications(archiveNotifications);  
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
@@ -62,7 +59,7 @@ const NotificationPanel = () => {
       id="uncontrolled-tab-example"
       className="mb-3 my-0 h-100"
       justify>
-      <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotificationCount}</Badge></span>}>
+      <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotifications.length}</Badge></span>}>
         {nonArchiveNotifications.map((notification, index) => (
           <Notification 
             key={index} 
@@ -72,7 +69,7 @@ const NotificationPanel = () => {
           />
         ))}
       </Tab>
-      <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotificationCount}</Badge></span>}>
+      <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotifications.length}</Badge></span>}>
         {archiveNotifications.map((notification, index) => (
           <Notification 
             key={index} 
