@@ -75,8 +75,7 @@ const NotificationPanel = () => {
   return (
     <Container className='bg-white py-4'>
       <Tabs
-      defaultActiveKey="Updates"
-      activeKey="updates"
+      defaultActiveKey="updates"
       id="uncontrolled-tab-example"
       className="mb-3 my-0 h-100"
       justify>
