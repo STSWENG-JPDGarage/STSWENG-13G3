@@ -4,6 +4,14 @@ import CloseButton from 'react-bootstrap/CloseButton';
 
 
 const Notification = ({ message, stockRemaining, timeElapsed, isArchive, onClose }) => {
+
+  let stockStatus;
+  if (stockRemaining > 0 && stockRemaining <= 10) {
+    stockStatus = `Danger Zone`;
+  } else if (stockRemaining === 0) {
+    stockStatus = 'Out of Stock';
+  }
+
   return (
     <Toast className='bg_card2-red'>
       <Toast.Body>
@@ -11,7 +19,7 @@ const Notification = ({ message, stockRemaining, timeElapsed, isArchive, onClose
           <Col sm={10}><p className='txt-16 fw-bold'>{message}</p></Col>
           <Col sm={2} className='d-flex justify-content-end'><CloseButton onClick={onClose}/></Col>
         </Row>
-        <Row><p className='txt-14'>Stock remaining: {stockRemaining}</p></Row>
+        <Row><p className='txt-14'>Status: {stockStatus}<br />Stock remaining: {stockRemaining}</p></Row>
         <Row>
           <Col><p>{timeElapsed}</p></Col>
           <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>
