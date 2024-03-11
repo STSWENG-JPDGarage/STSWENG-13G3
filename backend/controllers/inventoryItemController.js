@@ -116,7 +116,7 @@ const updateInventoryItemById = async(req, res) => {
         const updatedData = req.body; // Data to update, including stockNumber and stockStatus
 
         // Check if the updated stockNumber is 0, and if so, set stockStatus to 'Out of Stock'
-        if (updatedData.stockNumber === 0) {
+        if (updatedData.stockNumber == 0) {
             updatedData.stockStatus = 'Out of Stock'
         } else if (updatedData.stockNumber <= 10) {
             updatedData.stockStatus = 'Danger Zone'
