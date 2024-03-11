@@ -10,7 +10,13 @@ const NotificationPanel = () => {
   const [archiveNotifications, setArchiveNotifications] = useState([]);
 
   useEffect(() => {
-    fetchNotifications();
+    const intervalId = setInterval(() => {
+      // This function will be called every 3 seconds
+      fetchNotifications();
+    }, 2000);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
   // Fetches all non-archive and archive notifications
