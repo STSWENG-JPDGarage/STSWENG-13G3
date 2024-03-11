@@ -1,5 +1,6 @@
 import { Container, Card } from 'react-bootstrap'
 import SalesPaymentsOption from '../components/SalesPaymentsOption';
+import AddPaymentReminder from '../components/AddPaymentReminder';
 
 const Payments = () => {
 
@@ -9,6 +10,7 @@ const Payments = () => {
         <Container className='main'>
             <SalesPaymentsOption />
             <Card>
+            <AddPaymentReminder />
             </Card>
         </Container>
     </>
