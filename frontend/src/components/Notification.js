@@ -13,7 +13,7 @@ const Notification = ({ message, stockRemaining, timeElapsed, isArchive, onClose
   }
 
   return (
-    <Toast className='bg_card2-red'>
+    <Toast className={isArchive === "No" ? 'bg-background-red' : 'bg-white'}>
       <Toast.Body>
         <Row>
           <Col sm={10}><p className='txt-16 fw-bold'>ITEM STOCK ALERT</p></Col>
