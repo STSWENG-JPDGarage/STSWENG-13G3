@@ -4,7 +4,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
-import AddPaymentReminder from '../components/AddPaymentReminder';
+import AddReminder from '../components/AddReminder';
 import { useState } from 'react';
 
 
@@ -223,7 +223,7 @@ const Payments = () => {
                         <Row className='d-flex justify-content-center mx-5'>
                             <Button variant="primary" onClick={handleShow} className='bg-background-red border-0 txt-black shadow-sm fw-bold py-2'>Add New Reminder</Button>
 
-                            <AddPaymentReminder show={modalShow} handleClose={handleClose} />
+                            <AddReminder show={modalShow} handleClose={handleClose} />
                         </Row>
                     </Tab>
                     <Tab eventKey="outgoing" title="Outgoing" className='mb-4'>
@@ -425,7 +425,7 @@ const Payments = () => {
                         <Row className='d-flex justify-content-center mx-5'>
                             <Button variant="primary" onClick={handleShow} className='bg-background-red border-0 txt-black shadow-sm fw-bold py-2'>Add New Reminder</Button>
 
-                            <AddPaymentReminder show={modalShow} handleClose={handleClose} />
+                            <AddReminder show={modalShow} handleClose={handleClose} />
                         </Row>
                     </Tab>
                 </Tabs>

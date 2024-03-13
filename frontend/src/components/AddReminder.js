@@ -2,7 +2,7 @@ import { Form, Card, Button, Container, Row, Col} from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 
-const AddPaymentReminder = ({ show, handleClose }) => {
+const AddReminder = ({ show, handleClose }) => {
 
    return(
       <Modal 
@@ -48,4 +48,4 @@ const AddPaymentReminder = ({ show, handleClose }) => {
    );
 }
 
-export default AddPaymentReminder;
+export default AddReminder;
