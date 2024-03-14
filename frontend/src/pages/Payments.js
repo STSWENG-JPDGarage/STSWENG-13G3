@@ -1,4 +1,3 @@
-import { Container, Card } from 'react-bootstrap'
 import { Container, Card, Row, Col } from 'react-bootstrap'
 import SalesPaymentsOption from '../components/SalesPaymentsOption';
 import Tab from 'react-bootstrap/Tab';
