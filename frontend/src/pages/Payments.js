@@ -38,7 +38,7 @@ const Payments = () => {
                 const paymentRemindersData = await response.json(); 
                 paymentRemindersData.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate)); // Sort notifications (most recent first)
                 const incomingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "incoming");
-                const outgoinPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "outgoing");
+                const outgoingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "outgoing");
                 setIncomingPayments(incomingPayments);
                 setOutgoingPayments(outgoingPayments);  
         } catch (error) {
