@@ -110,7 +110,9 @@ const Payments = () => {
                     </div>
                 </div>
                 <div className='d-flex justify-content-end mt-4'>
-                    <Button className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
+                    <Button variant="primary" onClick={handleShow} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
+                
+                    <AddReminder show={modalShow} handleClose={handleClose} />
                 </div>
             </Card>
         </Container>
