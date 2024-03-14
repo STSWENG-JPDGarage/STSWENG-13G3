@@ -4,12 +4,26 @@ import React, { useState } from 'react';
 import { DOMAIN } from '../config'
 
 const AddReminder = ({ show, handleClose }) => {
+   
+   // State variables for payment reminder data
    const [clientName, setClientName] = useState('');  
    const [paymentType, setPaymentType] = useState('');
    const [paymentAmount, setPaymentAmount] = useState('');
    const [dueDate, setDueDate] = useState('');
 
-   // Add payment reminder to database
+   // State variables for error handling
+   // TODO: 
+
+   // State variables for enabling the submit button when there's no error
+   // TODO:
+
+   // Enable button when there are no more errors or vice versa
+   // TODO:
+
+   // Handle all inputs (this is multiple)
+   // TODO:
+
+   // Handles adding payment reminder to database
    const handleAddReminder = async () => {
       try {
          const response = await fetch(`${DOMAIN}/paymentReminder/paymentReminders-create`, {
