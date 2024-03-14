@@ -4,14 +4,47 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
 import AddReminder from '../components/AddReminder';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { DOMAIN } from '../config'
 
 
 const Payments = () => {
+    // State variables for payment reminder data
+    const [incomingPayments, setIncomingPayments] = useState([]);
+    const [outgoingPayments, setOutgoingPayments] = useState([]);
+
+    // State variables for frontend design
     const [modalShow, setModalShow] = useState(false);
 
     const handleClose = () => setModalShow(false);
     const handleShow = () => setModalShow(true);
+
+    // Mimic live-updates by fetching payment reminders every second
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+          fetchPaymentReminders();
+        }, 1000);
+    
+        return () => clearInterval(intervalId);
+      }, []);
+
+    // Fetches all incoming and outgoing payment reminders
+    const fetchPaymentReminders = async () => {
+        try {
+            const response = await fetch(`${DOMAIN}/paymentReminder/paymentReminders-get`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch payment reminders');
+            }
+                const paymentRemindersData = await response.json(); 
+                paymentRemindersData.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate)); // Sort notifications (most recent first)
+                const incomingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "incoming");
+                const outgoinPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "outgoing");
+                setIncomingPayments(incomingPayments);
+                setOutgoingPayments(outgoingPayments);  
+        } catch (error) {
+            console.error('Error fetching payment reminders:', error);
+        }
+    };
 
     return (
     <>
@@ -25,9 +58,9 @@ const Payments = () => {
                             <p className='txt-20 my-0'>Due in 2 days:</p>
                             <p className='txt-36 my-0'>Arai Helmets Philippines</p>
                         </div>
-                            <card className='bg-background-red txt-payment-dark-green m-1 p-2 px-3 txt-36 rounded'>
+                            <Card className='bg-background-red txt-payment-dark-green m-1 p-2 px-3 txt-36 rounded'>
                                 <p>₱44,697.13</p>
-                            </card>
+                            </Card>
                     </div>
                 </Card>
 

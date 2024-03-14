@@ -9,13 +9,12 @@ const NotificationPanel = () => {
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
 
+  // Mimic live-updates by fetching notifications every second
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // This function will be called every 3 seconds
       fetchNotifications();
     }, 1000);
 
-    // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 
