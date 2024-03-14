@@ -70,7 +70,7 @@ const AddReminder = ({ show, handleClose }) => {
             <h6>Payment Type</h6>
             <Form.Group className="pb-3" controlId="paymentType">
                <Form.Select aria-label="Payment Type" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} >
-                  <option value="" disabled>Payment Type</option>
+                  <option value="" disabled>Select payment type</option>
                   <option value="incoming">Incoming Payment</option>
                   <option value="outgoing">Outgoing Payment</option>
                </Form.Select>
