@@ -15,7 +15,7 @@ const paymentReminderSchema = new Schema({
     paymentAmount: {
         type: Number,
         required: true,
-        min: 0,
+        min: [0, 'Payment Amount should be greater than or equal to 0'],
     },
     dueDate: {
         type: Date,
