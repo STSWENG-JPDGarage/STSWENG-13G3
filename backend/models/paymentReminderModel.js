@@ -7,7 +7,12 @@ const paymentReminderSchema = new Schema({
         type: String,
         required: true,
     },
-    price: {
+    paymentType: {
+        type: String,
+        enum: ['incoming', 'outgoing'],
+        required: true
+    },
+    paymentAmount: {
         type: Number,
         required: true,
         min: 0,
@@ -15,7 +20,7 @@ const paymentReminderSchema = new Schema({
     dueDate: {
         type: Date,
         required: true,
-    }
+    },
 })
 
 const paymentReminder = mongoose.model('paymentReminder', paymentReminderSchema)

@@ -5,10 +5,11 @@ const paymentReminderController = {
     // Create a new payment reminder
     createPaymentReminder: async (req, res) => {
         try {
-            const { clientName, price, dueDate } = req.body;
+            const { clientName, paymentType, paymentAmount, dueDate } = req.body;
             const newPaymentReminder = new PaymentReminder({
                 clientName,
-                price,
+                paymentType,
+                paymentAmount,
                 dueDate
             });
             await newPaymentReminder.save();
@@ -44,10 +45,11 @@ const paymentReminderController = {
     // Update a specific payment reminder by ID
     updatePaymentReminderById: async (req, res) => {
         try {
-            const { clientName, price, dueDate } = req.body;
+            const { clientName, paymentType, paymentAmount, dueDate } = req.body;
             const updatedPaymentReminder = await PaymentReminder.findByIdAndUpdate(req.params.id, {
                 clientName,
-                price,
+                paymentType,
+                paymentAmount,
                 dueDate
             }, { new: true });
             if (!updatedPaymentReminder) {
@@ -78,7 +80,8 @@ const paymentReminderController = {
 // Create a new payment reminder
 const newPaymentReminder = new PaymentReminder({
     clientName: 'Example Client',
-    price: 999,
+    paymentType: 'incoming',
+    paymentAmount: 999,
     dueDate: new Date('2024-12-31')
 });
 // Save the to the database
