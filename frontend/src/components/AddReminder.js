@@ -43,24 +43,27 @@ const AddReminder = ({ show, handleClose }) => {
          </Modal.Header>
          <Modal.Body>
             <Form className="mb-5">
+            <h6>Client Name</h6>
             <Form.Group className="pb-3" controlId="clientName">
             <Form.Control type="text" placeholder="Client Name" value={clientName} onChange={(e) => setClientName(e.target.value)} />
             </Form.Group>
 
+            <h6>Payment Amount</h6>
+            <Form.Group className="pb-3" controlId="paymentAmount">
+            <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
+            </Form.Group>
+
+            <h6>Payment Type</h6>
             <Form.Group className="pb-3" controlId="paymentType">
                <Form.Select aria-label="Reminder every" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} >
-                  <option value="" disabled>Payment Type:</option>
                   <option value="incoming">Incoming Payment</option>
                   <option value="outgoing">Outgoing Payment</option>
                </Form.Select>
             </Form.Group>
 
-            <Form.Group className="pb-3" controlId="paymentAmount">
-            <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
-            </Form.Group>
-
+            <h6>Due Date</h6>
             <Form.Group className="pb-3" controlId="dueDate">
-            <Form.Control type="text" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
             </Form.Group>
 
             {/* <Form.Group className="pb-3" controlId="timeReminder">
