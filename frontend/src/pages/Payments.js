@@ -69,7 +69,7 @@ const Payments = () => {
                 throw new Error('Failed to fetch payment reminders');
             }
                 const paymentRemindersData = await response.json(); 
-                paymentRemindersData.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate)); // Sort notifications (most recent first)
+                paymentRemindersData.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)); // Sort notifications (most recent first)
                 if (paymentRemindersData.length > 0) {
                     const closestPaymentReminder = paymentRemindersData[0];
                     setClosestPaymentReminder(closestPaymentReminder);
@@ -95,7 +95,7 @@ const Payments = () => {
                     {incomingPayments.length === 0 && outgoingPayments.length === 0 ? (
                         <div className='d-flex justify-content-between'>
                             <div>      
-                                <p className='txt-36 my-0'>You do not have any payment reminders.</p>
+                                <p className='txt-36 my-0'>No pending payments.</p>
                             </div>
                         </div>
                     ) : (
@@ -113,79 +113,41 @@ const Payments = () => {
 
                 <div className='d-flex justify-content-between'>
                     <div className='w-50 me-1'>
-                        <p className='txt-16 fw-bold mb-1 mt-2'>{incomingPayments.length} Incoming Payments</p>
+                    <p className='txt-16 fw-bold mb-1 mt-2'>{incomingPayments.length === 1 ? '1 Incoming Payment' : `${incomingPayments.length} Incoming Payments`}</p>
                         <ListGroup as="ol" numbered>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
+                            {incomingPayments.map((paymentReminder, index) => (
+                                <ListGroup.Item
+                                    key={index}
+                                    as="li"
+                                    className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
+                                >
+                                    <div className="ms-2 me-auto txt-14 fw-semibold">
+                                    <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
+                                    {formatToPhilippineCurrency(paymentReminder.paymentAmount)}
+                                    <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
+                                    </div>
+                                    <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
+                                </ListGroup.Item>
+                            ))}
                         </ListGroup>
                     </div>
                     <div className='w-50 ms-1'>
-                    <p className='txt-16 fw-bold mb-1 mt-2'>{outgoingPayments.length} Outgoing Payments</p>
+                    <p className='txt-16 fw-bold mb-1 mt-2'>{outgoingPayments.length === 1 ? '1 Outgoing Payment' : `${outgoingPayments.length} Outgoing Payments`}</p>
                         <ListGroup as="ol" numbered>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                        >
-                            <div className="ms-2 me-auto txt-14 fw-semibold">
-                            <div className="fw-bold txt-20 fw-bold">Juan Dela Cruz</div>
-                            ₱7,579.29
-                            <p className='txt-gray-text txt-10 mb-2'>In 6 days (09/20/2023)</p>
-                            </div>
-                            <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                        </ListGroup.Item>
+                            {outgoingPayments.map((paymentReminder, index) => (
+                                    <ListGroup.Item
+                                        key={index}
+                                        as="li"
+                                        className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
+                                    >
+                                        <div className="ms-2 me-auto txt-14 fw-semibold">
+                                        <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
+                                        {formatToPhilippineCurrency(paymentReminder.paymentAmount)}
+                                        <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
+                                        </div>
+                                        <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
+                                    </ListGroup.Item>
+                            ))}
                         </ListGroup>
                     </div>
                 </div>
