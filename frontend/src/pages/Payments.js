@@ -69,13 +69,32 @@ const Payments = () => {
                 throw new Error('Failed to fetch payment reminders');
             }
                 const paymentRemindersData = await response.json(); 
-                paymentRemindersData.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)); // Sort notifications (most recent first)
+                
+                // Sort by dueDate
+                paymentRemindersData.sort((a, b) => {
+                    const dateComparison = new Date(a.dueDate) - new Date(b.dueDate);
+                    if (dateComparison === 0) {
+                        // If due dates are the same, sort by paymentType (outgoing before incoming)
+                        if (a.paymentType === "outgoing" && b.paymentType === "incoming") {
+                            return -1; // Sort a before b (outgoing before incoming)
+                        } else if (a.paymentType === "incoming" && b.paymentType === "outgoing") {
+                            return 1; // Sort b before a (outgoing before incoming)
+                        } else {
+                            return 0; // Preserve the original order
+                        }
+                    }
+                    return dateComparison; // Sort by due date
+                });
+
+                // set closest payment reminder
                 if (paymentRemindersData.length > 0) {
                     const closestPaymentReminder = paymentRemindersData[0];
                     setClosestPaymentReminder(closestPaymentReminder);
                 } else {
                     setClosestPaymentReminder(null); // Set closest payment reminder to null if array is empty
                 }
+
+                // Set incoming and outgoing payments
                 const incomingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "incoming");
                 const outgoingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "outgoing");
                 setIncomingPayments(incomingPayments);
