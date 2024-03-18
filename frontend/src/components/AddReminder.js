@@ -26,7 +26,7 @@ const AddReminder = ({ show, handleClose }) => {
    // Handles adding payment reminder to database
    const handleAddReminder = async () => {
       try {
-         const response = await fetch(`${DOMAIN}/paymentReminder/paymentReminders-create`, {
+         const response = await fetch(`${DOMAIN}/paymentReminder/create`, {
             method: 'POST',
             headers: {
                'Content-Type': 'application/json'

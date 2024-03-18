@@ -7,7 +7,6 @@ import AddReminder from '../components/AddReminder';
 import { useState, useEffect } from 'react';
 import { DOMAIN } from '../config'
 
-
 const Payments = () => {
     // State variables for payment reminder data
     const [incomingPayments, setIncomingPayments] = useState([]);
@@ -64,7 +63,7 @@ const Payments = () => {
     // Fetches all incoming and outgoing payment reminders
     const fetchPaymentReminders = async () => {
         try {
-            const response = await fetch(`${DOMAIN}/paymentReminder/paymentReminders-get`);
+            const response = await fetch(`${DOMAIN}/paymentReminder/get-nondue`);
             if (!response.ok) {
                 throw new Error('Failed to fetch payment reminders');
             }

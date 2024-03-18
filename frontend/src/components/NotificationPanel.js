@@ -21,7 +21,7 @@ const NotificationPanel = () => {
   // Fetches all non-archive and archive notifications
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`${DOMAIN}/notification/notifications-get`);
+      const response = await fetch(`${DOMAIN}/notification/get`);
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
@@ -68,7 +68,7 @@ const NotificationPanel = () => {
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
-      const response = await fetch(`${DOMAIN}/notification/notifications-update/${notificationId}`, {
+      const response = await fetch(`${DOMAIN}/notification/update/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -29,6 +29,30 @@ const paymentReminderController = {
         }
     },
 
+    // Retrieve all payment reminders
+    getAllPaymentReminders: async (req, res) => {
+        try {
+            const paymentReminders = await PaymentReminder.find();
+            res.status(200).json(paymentReminders);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    // Retrieve nondue payment reminders
+    getNonDuePaymentReminders: async (req, res) => {
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+    
+            const paymentReminders = await PaymentReminder.find({ dueDate: { $gte: today } });
+    
+            res.status(200).json(paymentReminders);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
     // Retrieve a specific payment reminder by ID
     getPaymentReminderById: async (req, res) => {
         try {

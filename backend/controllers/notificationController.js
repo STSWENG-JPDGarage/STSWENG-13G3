@@ -2,6 +2,18 @@ const Notification = require('../models/notificationModel');
 const mongoose = require('mongoose')
 
 const notificationController = {
+    // Controller function to create a new notification
+    createNotification: async (req, res) => {
+        try {
+            const newNotification = new Notification(req.body);
+            const savedNotification = await newNotification.save();
+            res.status(201).json(savedNotification);
+        } catch (error) {
+            console.error('Error adding notification:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
     // Controller function to fetch all notifications
     getAllNotifications: async (req, res) => {
         try {
@@ -13,20 +25,8 @@ const notificationController = {
         }
     },
 
-    // Controller function to add a new notification
-    addNotification: async (req, res) => {
-        try {
-            const newNotification = new Notification(req.body);
-            const savedNotification = await newNotification.save();
-            res.status(201).json(savedNotification);
-        } catch (error) {
-            console.error('Error adding notification:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    },
-
     // Controller function to update isArchive of a notification
-    updateNotification: async (req, res) => {
+    updateNotificationById: async (req, res) => {
         try {
             const { id } = req.params;
             const { isArchive } = req.body;
@@ -45,7 +45,7 @@ const notificationController = {
     },
 
     // Controller function to delete a notification by ID
-    deleteNotification: async (req, res) => {
+    deleteNotificationById: async (req, res) => {
         try {
             await Notification.findByIdAndDelete(req.params.id);
             res.sendStatus(204);
