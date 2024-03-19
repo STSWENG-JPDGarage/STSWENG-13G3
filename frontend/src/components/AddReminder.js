@@ -91,8 +91,7 @@ const AddReminder = ({ show, handleClose }) => {
                   <option value="5">When you wake up</option>
                </Form.Select>
             </Form.Group> */}
-
-         </Form>
+            </Form>
          </Modal.Body>
          <Modal.Footer>
             <Button variant="secondary" onClick={handleClose} className="px-4 me-2"> Close</Button>

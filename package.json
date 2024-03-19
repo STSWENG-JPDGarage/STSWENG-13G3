@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.3",
     "chart.js": "^4.4.0",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -15,5 +17,8 @@
     "react-router-dom": "^6.20.0",
     "react-scripts": "^5.0.1",
     "validator": "^13.11.0"
+  },
+  "scripts": {
+    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\""
   }
 }
