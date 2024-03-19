@@ -7,7 +7,8 @@ const inventoryRoutes = require('./routes/inventory')
 const verifiedUserRoutes = require('./routes/verified-users')
 const cartRoutes = require('./routes/cart')
 const orderRoutes = require('./routes/order')
-
+const paymentReminderRoutes = require('./routes/paymentReminder')
+const notificationRoutes = require('./routes/notification')
 
 // express app
 const app = express()
@@ -32,6 +33,8 @@ app.use('/users', verifiedUserRoutes)
 app.use('/inventory', inventoryRoutes)
 app.use('/cart', cartRoutes)
 app.use('/orders', orderRoutes)
+app.use('/paymentReminder', paymentReminderRoutes)
+app.use('/notification', notificationRoutes)
 
 let MONGO_URI = ""
 
