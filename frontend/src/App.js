@@ -26,6 +26,9 @@ import Header from './components/Header';
 import { useState, useEffect  } from 'react';
 import Payments from './pages/Payments';
 
+import Notification from './components/Notification';
+import NotificationPanel from './components/NotificationPanel';
+
 function App() {
   const { user, isLoading } = useAuthContext()
 
@@ -50,8 +53,8 @@ function App() {
       <BrowserRouter>
 
         <ConditionalNavbar setIsLoginPage={setIsLoginPage} />
-
-        <div className="pages">
+        <Row>
+        <Col sm={10} className="pages px-0">
           <Routes>
 
             <Route
@@ -125,7 +128,11 @@ function App() {
             />
 
           </Routes>
-        </div>
+
+        </Col>
+        <Col sm={2} className='col-5 px-0 my-0'><NotificationPanel/></Col>
+        </Row>
+        
       </BrowserRouter>
 
     </div>
