@@ -15,10 +15,13 @@ const Payments = () => {
     const [closestPaymentReminder, setClosestPaymentReminder] = useState([]);
 
     // State variables for frontend design
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShowAdd, setModalShowAdd] = useState(false);
+    const [modalShowEdit, setModalShowEdit] = useState(false);
 
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
+    const handleCloseAdd = () => setModalShowAdd(false);
+    const handleCloseEdit = () => setModalShowEdit(false);
+    const handleShowAdd = () => setModalShowAdd(true);
+    const handleShowEdit = () => setModalShowEdit(true);
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -145,7 +148,7 @@ const Payments = () => {
                                     {formatToPHP(paymentReminder.paymentAmount)}
                                     <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                     </div>
-                                    <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShow} handleClose={handleClose} /></Button>
+                                    <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShowEdit} handleClose={handleCloseEdit} /></Button>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
@@ -164,19 +167,15 @@ const Payments = () => {
                                         {formatToPHP(paymentReminder.paymentAmount)}
                                         <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                         </div>
-                                        <Button onClick={handleShow} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShow} handleClose={handleClose} /></Button>
+                                        <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShowEdit} handleClose={handleCloseEdit} /></Button>
                                     </ListGroup.Item>
                             ))}
                         </ListGroup>
                     </div>
                 </div>
                 <div className='d-flex justify-content-end mt-4'>
-                    <Button variant="primary" onClick={handleShow} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
-                    <AddReminder show={modalShow} handleClose={handleClose} />
-                </div>
-                <div className='d-flex justify-content-end mt-4'>
-                    <Button variant="primary" onClick={handleShow} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm pe-2'/></Button>
-                    <EditReminder show={modalShow} handleClose={handleClose} />
+                    <Button variant="primary" onClick={handleShowAdd} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
+                    <AddReminder show={modalShowAdd} handleClose={handleCloseAdd} />
                 </div>
             </Card>
         </Container>
