@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
 import AddReminder from '../components/AddReminder';
+import EditReminder from '../components/EditReminder';
 import { useState, useEffect } from 'react';
 import { DOMAIN } from '../config'
 
@@ -13,11 +14,21 @@ const Payments = () => {
     const [outgoingPayments, setOutgoingPayments] = useState([]);
     const [closestPaymentReminder, setClosestPaymentReminder] = useState([]);
 
-    // State variables for frontend design
-    const [modalShow, setModalShow] = useState(false);
+    // State variables for payment reminder data to be edited
+    const [editId, setEditId] = useState([]);
+    const [editClientName, setEditClientName] = useState([]);
+    const [editPaymentAmount, setEditPaymentAmount] = useState([]);
+    const [editPaymentType, setEditPaymentType] = useState([]);
+    const [editDueDate, setEditDueDate] = useState([]);
 
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
+    // State variables for frontend design
+    const [modalShowAdd, setModalShowAdd] = useState(false);
+    const [modalShowEdit, setModalShowEdit] = useState(false);
+
+    const handleCloseAdd = () => setModalShowAdd(false);
+    const handleCloseEdit = () => setModalShowEdit(false);
+    const handleShowAdd = () => setModalShowAdd(true);
+    const handleShowEdit = () => setModalShowEdit(true);
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -26,7 +37,7 @@ const Payments = () => {
         }, 1000);
     
         return () => clearInterval(intervalId);
-      }, []);
+    }, []);
 
     // Helper function to calculate date difference
     const getDueDateMessage = (dueDate) => {
@@ -144,7 +155,14 @@ const Payments = () => {
                                     {formatToPHP(paymentReminder.paymentAmount)}
                                     <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                     </div>
-                                    <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
+                                    <Button onClick={() => {
+                                        handleShowEdit(); 
+                                        setEditId(paymentReminder._id);
+                                        setEditClientName(paymentReminder.clientName);
+                                        setEditPaymentAmount(paymentReminder.paymentAmount);
+                                        setEditPaymentType(paymentReminder.paymentType);
+                                        setEditDueDate(paymentReminder.dueDate);
+                                    }} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
@@ -153,25 +171,41 @@ const Payments = () => {
                     <p className='txt-16 fw-bold mb-1 mt-2'>{outgoingPayments.length === 1 ? '1 Outgoing Payment' : `${outgoingPayments.length} Outgoing Payments`}</p>
                         <ListGroup as="ol" numbered>
                             {outgoingPayments.map((paymentReminder, index) => (
-                                    <ListGroup.Item
-                                        key={index}
-                                        as="li"
-                                        className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
-                                    >
-                                        <div className="ms-2 me-auto txt-14 fw-semibold">
-                                        <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
-                                        {formatToPHP(paymentReminder.paymentAmount)}
-                                        <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
-                                        </div>
-                                        <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
-                                    </ListGroup.Item>
+                                <ListGroup.Item
+                                    key={index}
+                                    as="li"
+                                    className="d-flex justify-content-between align-items-start bg-background-red pb-0 fw-bold txt-20 fw-bold mb-2 border-0 rounded"
+                                >
+                                    <div className="ms-2 me-auto txt-14 fw-semibold">
+                                    <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
+                                    {formatToPHP(paymentReminder.paymentAmount)}
+                                    <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
+                                    </div>
+                                    <Button onClick={() => {
+                                        handleShowEdit(); 
+                                        setEditId(paymentReminder._id);
+                                        setEditClientName(paymentReminder.clientName);
+                                        setEditPaymentAmount(paymentReminder.paymentAmount);
+                                        setEditPaymentType(paymentReminder.paymentType);
+                                        setEditDueDate(paymentReminder.dueDate);
+                                    }} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
+                                </ListGroup.Item>
                             ))}
                         </ListGroup>
                     </div>
                 </div>
                 <div className='d-flex justify-content-end mt-4'>
-                    <Button variant="primary" onClick={handleShow} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
-                    <AddReminder show={modalShow} handleClose={handleClose} />
+                    <Button variant="primary" onClick={handleShowAdd} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
+                    <AddReminder show={modalShowAdd} handleClose={handleCloseAdd} />
+                    <EditReminder 
+                        show={modalShowEdit} 
+                        handleClose={handleCloseEdit} 
+                        id={editId}
+                        clientName={editClientName}
+                        paymentAmount={editPaymentAmount}
+                        paymentType={editPaymentType}
+                        dueDate={editDueDate}
+                    />
                 </div>
             </Card>
         </Container>
