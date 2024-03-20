@@ -30,7 +30,7 @@ const Payments = () => {
         }, 1000);
     
         return () => clearInterval(intervalId);
-      }, []);
+    }, []);
 
     // Helper function to calculate date difference
     const getDueDateMessage = (dueDate) => {
@@ -148,7 +148,7 @@ const Payments = () => {
                                     {formatToPHP(paymentReminder.paymentAmount)}
                                     <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                     </div>
-                                    <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShowEdit} handleClose={handleCloseEdit} /></Button>
+                                    <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
@@ -167,7 +167,7 @@ const Payments = () => {
                                         {formatToPHP(paymentReminder.paymentAmount)}
                                         <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                         </div>
-                                        <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/><EditReminder show={modalShowEdit} handleClose={handleCloseEdit} /></Button>
+                                        <Button onClick={handleShowEdit} className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
                                     </ListGroup.Item>
                             ))}
                         </ListGroup>
@@ -176,6 +176,7 @@ const Payments = () => {
                 <div className='d-flex justify-content-end mt-4'>
                     <Button variant="primary" onClick={handleShowAdd} className='w-25 bg-background-red border-0 txt-black fw-bold txt-16'><img src="bell.png" className='icon_sm pe-2'/>Add New Reminder</Button>
                     <AddReminder show={modalShowAdd} handleClose={handleCloseAdd} />
+                    <EditReminder show={modalShowEdit} handleClose={handleCloseEdit} />
                 </div>
             </Card>
         </Container>
