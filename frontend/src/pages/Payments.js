@@ -74,9 +74,9 @@ const Payments = () => {
                     const dateComparison = new Date(a.dueDate) - new Date(b.dueDate);
                     if (dateComparison === 0) {
                         // If due dates are the same, sort by paymentType (outgoing before incoming)
-                        if (a.paymentType === "outgoing" && b.paymentType === "incoming") {
+                        if (a.paymentType === "Outgoing" && b.paymentType === "Incoming") {
                             return -1; // Sort a before b (outgoing before incoming)
-                        } else if (a.paymentType === "incoming" && b.paymentType === "outgoing") {
+                        } else if (a.paymentType === "Incoming" && b.paymentType === "Outgoing") {
                             return 1; // Sort b before a (outgoing before incoming)
                         } else {
                             return 0; // Preserve the original order
@@ -94,8 +94,8 @@ const Payments = () => {
                 }
 
                 // Set incoming and outgoing payments
-                const incomingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "incoming");
-                const outgoingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "outgoing");
+                const incomingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "Incoming");
+                const outgoingPayments = paymentRemindersData.filter(paymentReminder => paymentReminder.paymentType === "Outgoing");
                 setIncomingPayments(incomingPayments);
                 setOutgoingPayments(outgoingPayments);  
         } catch (error) {
