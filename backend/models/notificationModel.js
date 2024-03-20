@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-/* NEW VERSION
+// NEW VERSION
 // Base schema for common fields
 const notificationSchema = new Schema({
     notificationType: {
@@ -74,9 +74,8 @@ module.exports = {
     StockNotification,
     PaymentNotification
 };
-*/
 
-// PREVIOUS VERSION
+/* PREVIOUS VERSION
 const notificationSchema = new Schema({
     message: {
         type: String,
@@ -104,3 +103,4 @@ const notificationSchema = new Schema({
 const notification = mongoose.model('notification', notificationSchema)
 
 module.exports = notification
+*/

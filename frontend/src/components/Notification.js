@@ -3,7 +3,7 @@ import {Row, Col} from 'react-bootstrap'
 import CloseButton from 'react-bootstrap/CloseButton';
 
 
-const Notification = ({ message, stockRemaining, timeElapsed, isArchive, onClose }) => {
+const Notification = ({ itemName, stockRemaining, timeElapsed, isArchive, onClose }) => {
 
   let stockStatus;
   if (stockRemaining > 0 && stockRemaining <= 10) {
@@ -19,7 +19,7 @@ const Notification = ({ message, stockRemaining, timeElapsed, isArchive, onClose
           <Col sm={10}><p className='txt-16 fw-bold'>ITEM STOCK ALERT</p></Col>
           <Col sm={2} className='d-flex justify-content-end'><CloseButton onClick={onClose}/></Col>
         </Row>
-        <Row><p className='txt-14'>Item <b>{message}</b> is currently at <b>{stockStatus}</b> status with <b>{stockRemaining}</b> {stockRemaining === 1 ? 'stock' : 'stocks'} remaining.</p></Row>
+        <Row><p className='txt-14'>Item <b>{itemName}</b> is currently at <b>{stockStatus}</b> status with <b>{stockRemaining}</b> {stockRemaining === 1 ? 'stock' : 'stocks'} remaining.</p></Row>
         <Row>
           <Col><p>{timeElapsed}</p></Col>
           <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>

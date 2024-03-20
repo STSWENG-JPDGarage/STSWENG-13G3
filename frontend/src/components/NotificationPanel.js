@@ -68,7 +68,7 @@ const NotificationPanel = () => {
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
-      const response = await fetch(`${DOMAIN}/notification/update/${notificationId}`, {
+      const response = await fetch(`${DOMAIN}/notification/update-isArchive/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ const NotificationPanel = () => {
         {nonArchiveNotifications.map((notification, index) => (
           <Notification 
             key={index} 
-            message={notification.message} 
+            itemName={notification.itemName} 
             stockRemaining={notification.stockRemaining}
             timeElapsed={formatTimeElapsed(notification.date)}
             isArchive={notification.isArchive}
@@ -109,7 +109,7 @@ const NotificationPanel = () => {
         {archiveNotifications.map((notification, index) => (
           <Notification 
             key={index} 
-            message={notification.message} 
+            itemName={notification.itemName} 
             stockRemaining={notification.stockRemaining}
             timeElapsed={formatTimeElapsed(notification.date)}
             isArchive={notification.isArchive}
