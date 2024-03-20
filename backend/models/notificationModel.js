@@ -58,7 +58,7 @@ const paymentNotificationSchema = new Schema({
         type: Number,
         required: true
     },
-    paymentDueDate: {
+    dueDate: {
         type: Date,
         required: true
     }

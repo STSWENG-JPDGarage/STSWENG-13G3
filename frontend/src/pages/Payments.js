@@ -39,9 +39,9 @@ const Payments = () => {
         const differenceInTime = midnightDueDate.getTime() - currentDate.getTime();
         const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
 
-        if (differenceInDays == 1) {
+        if (differenceInDays === 1) {
             return `Due in 1 day (${midnightDueDate.toLocaleDateString()})`;
-        } else if (differenceInDays == -1) {
+        } else if (differenceInDays === -1) {
             return `Due 1 day ago (${midnightDueDate.toLocaleDateString()})`;
         } else if (differenceInDays > 0) {
             return `Due in ${differenceInDays} days (${midnightDueDate.toLocaleDateString()})`;
@@ -52,8 +52,8 @@ const Payments = () => {
         }
     };
 
-    // Helper function to reformat numbers into Philippine currency with comma/s
-    const formatToPhilippineCurrency = (amount) => {
+    // Helper function to reformat numbers into PHP currency with comma/s
+    const formatToPHP = (amount) => {
         return new Intl.NumberFormat('en-PH', {
             style: 'currency',
             currency: 'PHP',
@@ -123,7 +123,7 @@ const Payments = () => {
                                 <p className='txt-36 my-0'>{closestPaymentReminder.clientName}</p>
                             </div>
                                 <Card className='bg-background-red txt-payment-dark-green m-1 p-2 px-3 txt-36 rounded'>
-                                    <p>{formatToPhilippineCurrency(closestPaymentReminder.paymentAmount)}</p>
+                                    <p>{formatToPHP(closestPaymentReminder.paymentAmount)}</p>
                                 </Card>
                         </div>
                     )}
@@ -141,7 +141,7 @@ const Payments = () => {
                                 >
                                     <div className="ms-2 me-auto txt-14 fw-semibold">
                                     <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
-                                    {formatToPhilippineCurrency(paymentReminder.paymentAmount)}
+                                    {formatToPHP(paymentReminder.paymentAmount)}
                                     <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                     </div>
                                     <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
@@ -160,7 +160,7 @@ const Payments = () => {
                                     >
                                         <div className="ms-2 me-auto txt-14 fw-semibold">
                                         <div className="fw-bold txt-20 fw-bold">{paymentReminder.clientName}</div>
-                                        {formatToPhilippineCurrency(paymentReminder.paymentAmount)}
+                                        {formatToPHP(paymentReminder.paymentAmount)}
                                         <p className='txt-gray-text txt-10 mb-2'>{getDueDateMessage(paymentReminder.dueDate)}</p>
                                         </div>
                                         <Button className='rounded-full border-0 bg-icon-in-the-background py-0'><img src="edit_white.png" className='icon_sm'/></Button>
