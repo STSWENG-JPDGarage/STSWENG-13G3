@@ -1,13 +1,21 @@
-const Notification = require('../models/notificationModel');
+const { Notification, StockNotification, PaymentNotification } = require('../models/notificationModel');
 const mongoose = require('mongoose')
 
 const notificationController = {
     // Controller function to create a new notification
     createNotification: async (req, res) => {
         try {
-            const newNotification = new Notification(req.body);
+            let newNotification;
+            if (req.body.notificationType === 'Stock') {
+                newNotification = new StockNotification(req.body);
+            } else if (req.body.notificationType === 'Payment') {
+                newNotification = new PaymentNotification(req.body);
+            } else {
+                return res.status(400).json({ error: 'Invalid notification type' });
+            }
             const savedNotification = await newNotification.save();
             res.status(201).json(savedNotification);
+
         } catch (error) {
             console.error('Error adding notification:', error);
             res.status(500).json({ error: 'Internal server error' });
@@ -26,7 +34,7 @@ const notificationController = {
     },
 
     // Controller function to update isArchive of a notification
-    updateNotificationById: async (req, res) => {
+    updateIsArchiveById: async (req, res) => {
         try {
             const { id } = req.params;
             const { isArchive } = req.body;

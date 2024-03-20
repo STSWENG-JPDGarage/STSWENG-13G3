@@ -1,7 +1,7 @@
-import {Container, Badge} from 'react-bootstrap'
+import { Container, Badge } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Notification from '../components/Notification';
+import { StockNotification, PaymentNotification } from '../components/Notification';
 import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
 
@@ -68,7 +68,7 @@ const NotificationPanel = () => {
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
-      const response = await fetch(`${DOMAIN}/notification/update/${notificationId}`, {
+      const response = await fetch(`${DOMAIN}/notification/update-isArchive/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -95,29 +95,57 @@ const NotificationPanel = () => {
       justify>
       <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotifications.length}</Badge></span>}>
         {nonArchiveNotifications.map((notification, index) => (
-          <Notification 
-            key={index} 
-            message={notification.message} 
-            stockRemaining={notification.stockRemaining}
-            timeElapsed={formatTimeElapsed(notification.date)}
-            isArchive={notification.isArchive}
-            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
-          />
+          <div key={index}>
+            {notification.notificationType === 'Stock' && (
+              <StockNotification 
+                itemName={notification.itemName} 
+                stockRemaining={notification.stockRemaining}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+            {notification.notificationType === 'Payment' && (
+              <PaymentNotification 
+                clientName={notification.clientName} 
+                paymentType={notification.paymentType}
+                paymentAmount={notification.paymentAmount}
+                dueDate={notification.dueDate}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+          </div>
         ))}
       </Tab>
       <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotifications.length}</Badge></span>}>
         {archiveNotifications.map((notification, index) => (
-          <Notification 
-            key={index} 
-            message={notification.message} 
-            stockRemaining={notification.stockRemaining}
-            timeElapsed={formatTimeElapsed(notification.date)}
-            isArchive={notification.isArchive}
-            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
-            />
+          <div key={index}>
+            {notification.notificationType === 'Stock' && (
+              <StockNotification 
+                itemName={notification.itemName} 
+                stockRemaining={notification.stockRemaining}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+            {notification.notificationType === 'Payment' && (
+              <PaymentNotification 
+                clientName={notification.clientName} 
+                paymentType={notification.paymentType}
+                paymentAmount={notification.paymentAmount}
+                dueDate={notification.dueDate}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+          </div>
         ))}
       </Tab>
-    </Tabs>
+      </Tabs>
     </Container>
   );
 };
