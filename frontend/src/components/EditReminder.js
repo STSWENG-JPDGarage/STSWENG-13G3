@@ -3,13 +3,13 @@ import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import { DOMAIN } from '../config'
 
-const EditReminder = ({ show, handleClose }) => {
+const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymentType, dueDate }) => {
    
    // State variables for payment reminder data
-   const [clientName, setClientName] = useState('');  
-   const [paymentType, setPaymentType] = useState('');
-   const [paymentAmount, setPaymentAmount] = useState('');
-   const [dueDate, setDueDate] = useState('');
+   const [newClientName, setNewClientName] = useState(clientName);  
+   const [newPaymentType, setNewPaymentType] = useState(paymentType);
+   const [newPaymentAmount, setNewPaymentAmount] = useState(paymentAmount);
+   const [newDueDate, setNewDueDate] = useState(dueDate);
 
    // State variables for error handling
    // TODO: 
@@ -23,25 +23,30 @@ const EditReminder = ({ show, handleClose }) => {
    // Handle all inputs (there will be multiple of this)
    // TODO:
 
-   // Handles adding payment reminder to database
+   // Handles editing payment reminder from the database
    const handleEditReminder = async () => {
       try {
-         const response = await fetch(`${DOMAIN}/paymentReminder/create`, {
-            method: 'POST',
+         const response = await fetch(`${DOMAIN}/paymentReminder/update/${id}`, {
+            method: 'PUT',
             headers: {
-               'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ clientName, paymentType, paymentAmount, dueDate })
+            body: JSON.stringify({ 
+               clientName : newClientName,
+               paymentType : newPaymentType,
+               paymentAmount : newPaymentAmount,
+               dueDate : newDueDate
+            })
          });
 
          if (response.ok) {
-            console.log('Payment reminder added successfully');
+            console.log('Payment reminder edited successfully');
             handleClose();
          } else {
-            console.error('Failed to add payment reminder:', response.statusText);
+            console.error('Failed to edit payment reminder:', response.statusText);
          }
       } catch (error) {
-         console.error('Error adding payment reminder:', error);
+         console.error('Error editing payment reminder:', error);
       }
    };
 
@@ -59,38 +64,28 @@ const EditReminder = ({ show, handleClose }) => {
             <Form className="mb-5">
             <h6>Edit Client Name</h6>
             <Form.Group className="pb-3" controlId="clientName">
-            <Form.Control type="text" placeholder="Client Name" value={clientName} onChange={(e) => setClientName(e.target.value)} />
+            <Form.Control type="text" placeholder="Client Name" value={newClientName} onChange={(e) => setNewClientName(e.target.value)} />
             </Form.Group>
 
             <h6>Edit Payment Amount</h6>
             <Form.Group className="pb-3" controlId="paymentAmount">
-            <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
+            <Form.Control type="text" placeholder="Payment Amount" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(e.target.value)} />
             </Form.Group>
 
             <h6>Edit Payment Type</h6>
             <Form.Group className="pb-3" controlId="paymentType">
-               <Form.Select aria-label="Payment Type" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} >
+               <Form.Select aria-label="Payment Type" value={newPaymentType} onChange={(e) => setNewPaymentType(e.target.value)} >
                   <option value="" disabled>Select payment type</option>
-                  <option value="incoming">Incoming Payment</option>
-                  <option value="outgoing">Outgoing Payment</option>
+                  <option value="Incoming">Incoming Payment</option>
+                  <option value="Outgoing">Outgoing Payment</option>
                </Form.Select>
             </Form.Group>
 
             <h6>Edit Due Date</h6>
             <Form.Group className="pb-3" controlId="dueDate">
-            <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            <Form.Control type="date" placeholder="Due Date" value={newDueDate} onChange={(e) => setNewDueDate(e.target.value)} />
             </Form.Group>
 
-            {/* <Form.Group className="pb-3" controlId="timeReminder">
-               <Form.Select aria-label="Reminder every">
-                  <option value="" disabled>Repeats every</option>
-                  <option value="1">Hour</option>
-                  <option value="2">Minute</option>
-                  <option value="3">Day</option>
-                  <option value="4">When you sleep</option>
-                  <option value="5">When you wake up</option>
-               </Form.Select>
-            </Form.Group> */}
             </Form>
          </Modal.Body>
          <Modal.Footer>
