@@ -1,4 +1,4 @@
-import { Form, Card, Button, Container, Row, Col} from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import { DOMAIN } from '../config'
@@ -11,17 +11,13 @@ const AddReminder = ({ show, handleClose }) => {
    const [paymentAmount, setPaymentAmount] = useState('');
    const [dueDate, setDueDate] = useState('');
 
-   // State variables for error handling
-   // TODO: 
-
-   // State variables for enabling the submit button when there's no error
-   // TODO:
-
-   // Enable button when there are no more errors or vice versa
-   // TODO:
-
-   // Handle all inputs (there will be multiple of this)
-   // TODO:
+   // Display blank input fields
+   const setInitialValues = () => {
+      setClientName('')
+      setPaymentType('')
+      setPaymentAmount('')
+      setDueDate('')
+   }
 
    // Handles adding payment reminder to database
    const handleAddReminder = async () => {
@@ -47,7 +43,9 @@ const AddReminder = ({ show, handleClose }) => {
 
    return(
       <Modal 
-      show={show} onHide={handleClose}
+      show={show} 
+      onShow={setInitialValues}
+      onHide={handleClose}
       size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered

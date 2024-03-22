@@ -6,10 +6,10 @@ import { DOMAIN } from '../config'
 const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymentType, dueDate }) => {
    
    // State variables for payment reminder data
-   const [newClientName, setNewClientName] = useState();  
-   const [newPaymentType, setNewPaymentType] = useState();
-   const [newPaymentAmount, setNewPaymentAmount] = useState();
-   const [newDueDate, setNewDueDate] = useState();
+   const [newClientName, setNewClientName] = useState('');  
+   const [newPaymentType, setNewPaymentType] = useState('');
+   const [newPaymentAmount, setNewPaymentAmount] = useState('');
+   const [newDueDate, setNewDueDate] = useState('');
 
    // State variables for error handling
    // TODO: 
@@ -23,12 +23,27 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
    // Handle all inputs (there will be multiple of this)
    // TODO:
 
-   // Displays the prefilled values of the input fields
+   // Display the prefilled values of the input fields
    const setInitialValues = () => {
       setNewClientName(clientName)
       setNewPaymentType(paymentType)
       setNewPaymentAmount(paymentAmount)
-      setNewDueDate(dueDate)
+      setNewDueDate(formatDate(dueDate))
+   }
+
+   // Helper function to format date
+   const formatDate = (dueDate) => {
+      const date = new Date(dueDate);
+      const year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      if (month < 10) {
+            month = '0' + month;
+      }
+      let day = date.getDate();
+      if (day < 10) {
+            day = '0' + day;
+      }
+      return `${year}-${month}-${day}`;
    }
 
    // Handles editing payment reminder from the database
