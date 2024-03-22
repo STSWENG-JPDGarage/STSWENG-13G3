@@ -11,18 +11,6 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
    const [newPaymentAmount, setNewPaymentAmount] = useState('');
    const [newDueDate, setNewDueDate] = useState('');
 
-   // State variables for error handling
-   // TODO: 
-
-   // State variables for enabling the submit button when there's no error
-   // TODO:
-
-   // Enable button when there are no more errors or vice versa
-   // TODO:
-
-   // Handle all inputs (there will be multiple of this)
-   // TODO:
-
    // Display the prefilled values of the input fields
    const setInitialValues = () => {
       setNewClientName(clientName)
