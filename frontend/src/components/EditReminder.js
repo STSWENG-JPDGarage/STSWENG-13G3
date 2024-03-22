@@ -1,4 +1,4 @@
-import { Form, Card, Button, Container, Row, Col} from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import { DOMAIN } from '../config'
@@ -6,10 +6,10 @@ import { DOMAIN } from '../config'
 const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymentType, dueDate }) => {
    
    // State variables for payment reminder data
-   const [newClientName, setNewClientName] = useState(clientName);  
-   const [newPaymentType, setNewPaymentType] = useState(paymentType);
-   const [newPaymentAmount, setNewPaymentAmount] = useState(paymentAmount);
-   const [newDueDate, setNewDueDate] = useState(dueDate);
+   const [newClientName, setNewClientName] = useState();  
+   const [newPaymentType, setNewPaymentType] = useState();
+   const [newPaymentAmount, setNewPaymentAmount] = useState();
+   const [newDueDate, setNewDueDate] = useState();
 
    // State variables for error handling
    // TODO: 
@@ -22,6 +22,14 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
 
    // Handle all inputs (there will be multiple of this)
    // TODO:
+
+   // Displays the prefilled values of the input fields
+   const setInitialValues = () => {
+      setNewClientName(clientName)
+      setNewPaymentType(paymentType)
+      setNewPaymentAmount(paymentAmount)
+      setNewDueDate(dueDate)
+   }
 
    // Handles editing payment reminder from the database
    const handleDeleteReminder = async () => {
@@ -73,7 +81,9 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
 
    return(
       <Modal 
-      show={show} onHide={handleClose}
+      show={show} 
+      onShow={setInitialValues}
+      onHide={handleClose}
       size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
