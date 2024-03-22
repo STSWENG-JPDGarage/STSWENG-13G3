@@ -9,7 +9,7 @@ const paymentReminderSchema = new Schema({
     },
     paymentType: {
         type: String,
-        enum: ['incoming', 'outgoing'],
+        enum: ['Incoming', 'Outgoing'],
         required: true
     },
     paymentAmount: {

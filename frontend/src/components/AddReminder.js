@@ -71,8 +71,8 @@ const AddReminder = ({ show, handleClose }) => {
             <Form.Group className="pb-3" controlId="paymentType">
                <Form.Select aria-label="Payment Type" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} >
                   <option value="" disabled>Select payment type</option>
-                  <option value="incoming">Incoming Payment</option>
-                  <option value="outgoing">Outgoing Payment</option>
+                  <option value="Incoming">Incoming Payment</option>
+                  <option value="Outgoing">Outgoing Payment</option>
                </Form.Select>
             </Form.Group>
 
@@ -81,16 +81,6 @@ const AddReminder = ({ show, handleClose }) => {
             <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
             </Form.Group>
 
-            {/* <Form.Group className="pb-3" controlId="timeReminder">
-               <Form.Select aria-label="Reminder every">
-                  <option value="" disabled>Repeats every</option>
-                  <option value="1">Hour</option>
-                  <option value="2">Minute</option>
-                  <option value="3">Day</option>
-                  <option value="4">When you sleep</option>
-                  <option value="5">When you wake up</option>
-               </Form.Select>
-            </Form.Group> */}
             </Form>
          </Modal.Body>
          <Modal.Footer>

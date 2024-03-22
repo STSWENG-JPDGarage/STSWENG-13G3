@@ -104,7 +104,7 @@ const paymentReminderController = {
 // Create a new payment reminder
 const newPaymentReminder = new PaymentReminder({
     clientName: 'Example Client',
-    paymentType: 'incoming',
+    paymentType: 'Incoming',
     paymentAmount: 999,
     dueDate: new Date('2024-12-31')
 });
