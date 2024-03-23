@@ -53,9 +53,9 @@ const AddReminder = ({ show, handleClose }) => {
       } else if (isNaN(parseFloat(paymentAmount))) {
          isValidPaymentAmount = 0;
          setErrorPaymentAmount('Payment amount must be a valid number.');
-      } else if (parseFloat(paymentAmount) < 0) {
+      } else if (parseFloat(paymentAmount) <= 0) {
          isValidPaymentAmount = 0;
-         setErrorPaymentAmount('Payment amount cannot be negative.');     
+         setErrorPaymentAmount('Payment amount must be greater than 0.');     
       }
 
       // Update validity of paymentType
