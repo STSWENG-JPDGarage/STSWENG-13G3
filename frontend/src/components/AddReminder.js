@@ -68,6 +68,17 @@ const AddReminder = ({ show, handleClose }) => {
       if (dueDate === '') {
          isValidDueDate = 0;
          setErrorDueDate('Due date is required.');  
+      } else {
+         const currentDate = new Date();
+         const selectedDate = new Date(dueDate);
+
+         currentDate.setHours(0, 0, 0, 0);
+         selectedDate.setHours(0, 0, 0, 0);
+     
+         if (selectedDate < currentDate) {
+            isValidDueDate = 0;
+            setErrorDueDate('Due date cannot be in the past.');
+         }
       }
 
       // Add to database if everything is valid
@@ -120,13 +131,13 @@ const AddReminder = ({ show, handleClose }) => {
             <h6>Client Name</h6>
             <Form.Group className="pb-3" controlId="clientName">
             <Form.Control type="text" placeholder="Client Name" value={clientName} onChange={(e) => setClientName(e.target.value)} />
-            <div className='ms-2 mb-3 txt-main-dominant-red fst-italic fw-bold'> {errorClientName} </div>
+            <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorClientName} </div>
             </Form.Group>
 
             <h6>Payment Amount</h6>
             <Form.Group className="pb-3" controlId="paymentAmount">
             <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
-            <div className='ms-2 mb-3 txt-main-dominant-red fst-italic fw-bold'> {errorPaymentAmount} </div>
+            <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorPaymentAmount} </div>
             </Form.Group>
 
             <h6>Payment Type</h6>
@@ -136,13 +147,13 @@ const AddReminder = ({ show, handleClose }) => {
                   <option value="Incoming">Incoming Payment</option>
                   <option value="Outgoing">Outgoing Payment</option>
                </Form.Select>
-               <div className='ms-2 mb-3 txt-main-dominant-red fst-italic fw-bold'> {errorPaymentType} </div>
+               <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorPaymentType} </div>
             </Form.Group>
 
             <h6>Due Date</h6>
             <Form.Group className="pb-3" controlId="dueDate">
             <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-            <div className='ms-2 mb-3 txt-main-dominant-red fst-italic fw-bold'> {errorDueDate} </div>
+            <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorDueDate} </div>
             </Form.Group>
 
             </Form>
