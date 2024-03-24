@@ -23,7 +23,7 @@ const AddReminder = ({ show, handleClose }) => {
    const [errorPaymentType, setErrorPaymentType] = useState('');
    const [errorDueDate, setErrorDueDate] = useState('');
 
-   // Display blank input fields
+   // Display blank input fields and error messages
    const setInitialValues = () => {
       setClientName('');
       setPaymentType('');
@@ -76,7 +76,7 @@ const AddReminder = ({ show, handleClose }) => {
       }
    }
 
-   // Validate payment type on blur
+   // Validate due date on blur
    const validateDueDate = () => {
       if (dueDate === '') {
          setIsValidDueDate(0);
@@ -186,7 +186,7 @@ const AddReminder = ({ show, handleClose }) => {
          </Modal.Body>
          <Modal.Footer>
             <Button variant="secondary" onClick={handleClose} className="px-4 me-2"> Close</Button>
-            <Button variant="danger" onClick={() => { validateAllFields(); }} className="px-4">Add Reminder</Button>
+            <Button variant="danger" onClick={validateAllFields} className="px-4">Add Reminder</Button>
         </Modal.Footer>
       </Modal>
    );
