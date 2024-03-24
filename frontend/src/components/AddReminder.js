@@ -11,6 +11,12 @@ const AddReminder = ({ show, handleClose }) => {
    const [paymentType, setPaymentType] = useState('');
    const [dueDate, setDueDate] = useState('');
 
+   // State variables for storing whether the variables are currently valid
+   const [isValidClientName, setIsValidClientName] = useState(0);
+   const [isValidPaymentAmount, setIsValidPaymentAmount] = useState(0);
+   const [isValidPaymentType, setIsValidPaymentType] = useState(0);
+   const [isValidDueDate, setIsValidDueDate] = useState(0);
+
    // State variables for error messages
    const [errorClientName, setErrorClientName] = useState('');
    const [errorPaymentAmount, setErrorPaymentAmount] = useState('');
@@ -29,44 +35,51 @@ const AddReminder = ({ show, handleClose }) => {
       setErrorDueDate('');
    }
 
-   // Validate input fields before adding the reminder
-   const validateAllFields = () => {
-      let isValidClientName = 1;
-      let isValidPaymentAmount = 1;
-      let isValidPaymentType = 1;
-      let isValidDueDate = 1;
-      setErrorClientName('');
-      setErrorPaymentAmount('');
-      setErrorPaymentType('');
-      setErrorDueDate('');
-
+   // Validate client name on blur
+   const validateClientName = () => {
       // Update validity of clientName
       if (clientName.trim() === '') {
-         isValidClientName = 0;
+         setIsValidClientName(0);
          setErrorClientName('Client name is required.');
       }
+      else {
+         setIsValidClientName(1);
+         setErrorClientName('');
+      }
+   }
 
-      // Update validity of paymentAmount
+   // Validate payment amount on blur
+   const validatePaymentAmount = () => {
       if (paymentAmount.trim() === '') {
-         isValidPaymentAmount = 0;
+         setIsValidPaymentAmount(0);
          setErrorPaymentAmount('Payment amount is required.');
       } else if (isNaN(parseFloat(paymentAmount))) {
-         isValidPaymentAmount = 0;
+         setIsValidPaymentAmount(0);
          setErrorPaymentAmount('Payment amount must be a valid number.');
       } else if (parseFloat(paymentAmount) <= 0) {
-         isValidPaymentAmount = 0;
+         setIsValidPaymentAmount(0);
          setErrorPaymentAmount('Payment amount must be greater than 0.');     
+      } else {
+         setIsValidPaymentAmount(1);
+         setErrorPaymentAmount('');           
       }
+   }
 
-      // Update validity of paymentType
+   // Validate payment type on blur
+   const validatePaymentType = () => {
       if (paymentType.trim() === '') {
-         isValidPaymentType = 0;
+         setIsValidPaymentType(0);
          setErrorPaymentType('Payment type is required.');  
+      } else {
+         setIsValidPaymentType(1);
+         setErrorPaymentType('');  
       }
+   }
 
-      // Update validity of dueDate
+   // Validate payment type on blur
+   const validateDueDate = () => {
       if (dueDate === '') {
-         isValidDueDate = 0;
+         setIsValidDueDate(0);
          setErrorDueDate('Due date is required.');  
       } else {
          const currentDate = new Date();
@@ -74,14 +87,27 @@ const AddReminder = ({ show, handleClose }) => {
 
          currentDate.setHours(0, 0, 0, 0);
          selectedDate.setHours(0, 0, 0, 0);
-     
+  
          if (selectedDate < currentDate) {
-            isValidDueDate = 0;
+            setIsValidDueDate(0);
             setErrorDueDate('Due date cannot be in the past.');
+         } else {
+            setIsValidDueDate(1);
+            setErrorDueDate('');           
          }
       }
+   }
 
-      // Add to database if everything is valid
+   // Validate input fields before adding the reminder
+   const validateAllFields = () => {
+
+      // Validate then update all error messages
+      validateClientName();
+      validatePaymentAmount();
+      validatePaymentType();
+      validateDueDate();
+
+      // Add to database if everything is valid, otherwise do nothing
       if (isValidClientName === 1 &&
          isValidPaymentType === 1 &&
          isValidPaymentAmount === 1 &&
@@ -130,19 +156,19 @@ const AddReminder = ({ show, handleClose }) => {
             <Form className="mb-5">
             <h6>Client Name</h6>
             <Form.Group className="pb-3" controlId="clientName">
-            <Form.Control type="text" placeholder="Client Name" value={clientName} onChange={(e) => setClientName(e.target.value)} />
+            <Form.Control type="text" placeholder="Client Name" value={clientName} onChange={(e) => setClientName(e.target.value)} onBlur={validateClientName}/>
             <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorClientName} </div>
             </Form.Group>
 
             <h6>Payment Amount</h6>
             <Form.Group className="pb-3" controlId="paymentAmount">
-            <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
+            <Form.Control type="text" placeholder="Payment Amount" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} onBlur={validatePaymentAmount}/>
             <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorPaymentAmount} </div>
             </Form.Group>
 
             <h6>Payment Type</h6>
             <Form.Group className="pb-3" controlId="paymentType">
-               <Form.Select aria-label="Payment Type" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} >
+               <Form.Select aria-label="Payment Type" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} onBlur={validatePaymentType}>
                   <option value="" disabled>Select payment type</option>
                   <option value="Incoming">Incoming Payment</option>
                   <option value="Outgoing">Outgoing Payment</option>
@@ -152,7 +178,7 @@ const AddReminder = ({ show, handleClose }) => {
 
             <h6>Due Date</h6>
             <Form.Group className="pb-3" controlId="dueDate">
-            <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            <Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} onBlur={validateDueDate}/>
             <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorDueDate} </div>
             </Form.Group>
 
