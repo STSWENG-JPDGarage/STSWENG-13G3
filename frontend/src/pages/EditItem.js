@@ -168,32 +168,38 @@ const EditItem = () => {
         }
         if (response.ok) {
             setError(null)
-            console.log('inventory item edited:', json) // print to console
+            console.log('inventory item edited:', json)
 
-            // Create restock notification if (danger_zone/out_of_stock) -> (in_stock)
+            // For testing purposes
+            console.log('prevStockNumber = ', prevStockNumber)
+            console.log('currStockNumber = ', stockNumber)
+
+            // Create restock notification if danger_zone/out_of_stock -> in_stock
             if (prevStockNumber <= 10 && stockNumber > 10) {
                 handleRestockNotification();
             }
 
+            // Update previous stock number tracker
+            setPrevStockNumber(stockNumber);
             alert('Item successfully edited!')
         }
     }
 
     // Handles adding restock notification to database
     const handleRestockNotification = async () => {
-        let notificationType = 'Stock';
-        let isArchive = 'No';
-        let itemId = id;
-        let itemName = partName;
-        let stockRemaining = stockNumber;
-
         try {
             const response = await fetch(`${DOMAIN}/notification/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ notificationType, isArchive, itemId, itemName, stockRemaining })
+                body: JSON.stringify({ 
+                    notificationType : 'Stock', 
+                    isArchive : 'No', 
+                    itemId : id, 
+                    itemName : partName, 
+                    stockRemaining : stockNumber
+                })
             });
 
             if (response.ok) {
