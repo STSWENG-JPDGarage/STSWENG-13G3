@@ -55,10 +55,14 @@ const StockNotification = ({ itemName, stockRemaining, timeElapsed, isArchive, o
     <Toast className={isArchive === "No" ? 'bg-background-red' : 'bg-white'}>
       <Toast.Body>
         <Row>
-          <Col sm={10}><p className='txt-16 fw-bold'>ITEM STOCK ALERT</p></Col>
+          <Col sm={10}><p className='txt-16 fw-bold'>ITEM {stockRemaining <= 10 ? 'STOCK ALERT' : 'RESTOCK'}</p></Col>
           <Col sm={2} className='d-flex justify-content-end'><CloseButton onClick={onClose}/></Col>
         </Row>
-        <Row><p className='txt-14'>Item <b>{itemName}</b> is currently at <b>{stockStatus}</b> status with <b>{stockRemaining}</b> {stockRemaining === 1 ? 'stock' : 'stocks'} remaining.</p></Row>
+        {stockRemaining <= 10 ? (
+          <Row><p className='txt-14'>Item <b>{itemName}</b> is currently at <b>{stockStatus}</b> status with <b>{stockRemaining}</b> {stockRemaining === 1 ? 'stock' : 'stocks'} remaining.</p></Row>
+        ) : (
+          <Row><p className='txt-14'>Item <b>{itemName}</b> has been restocked and now has <b>{stockRemaining}</b> {stockRemaining === 1 ? 'stock' : 'stocks'} remaining.</p></Row>
+        )}
         <Row>
           <Col><p>{timeElapsed}</p></Col>
           <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>
