@@ -74,17 +74,17 @@ function App() {
 
             <Route
               path="/sales-page"
-              element={(user && !isLoading && user.role === "Admin") ? <SalesPage /> : <Navigate to="/" />}
+              element={(user && !isLoading && (user.role === "Admin" || user.role === "Secretary")) ? <SalesPage /> : <Navigate to="/" />}
             />
 
             <Route
               path="/inventory/add-items"
-              element={user && !isLoading ? <AddInventoryItems /> : <Navigate to="/" />}
+              element={(user && !isLoading && (user.role === "Admin" || user.role === "Partsman")) ? <AddInventoryItems /> : <Navigate to="/" />}
             />
             
               <Route
                 path="/payments"
-                element={(user && !isLoading && user.role === "Admin") ? <Payments /> : <Navigate to="/"/>}
+                element={(user && !isLoading && (user.role === "Admin" || user.role === "Secretary")) ? <Payments /> : <Navigate to="/"/>}
               />  
 
             <Route
@@ -99,7 +99,7 @@ function App() {
 
             <Route
               path="/verified-user-list"
-              element={user && !isLoading ? <VerifiedUserList /> : <Navigate to="/" />}
+              element={(user && !isLoading && user.role === "Admin") ? <VerifiedUserList /> : <Navigate to="/" />}
             />
 
             <Route
@@ -109,22 +109,22 @@ function App() {
 
             <Route
               path="/add-verified-user"
-              element={user && !isLoading ? <AddVerifiedUser /> : <Navigate to="/" />}
+              element={(user && !isLoading && user.role === "Admin") ? <AddVerifiedUser /> : <Navigate to="/" />}
             />
 
             <Route
               path="/edit-verified-user"
-              element={user && !isLoading ? <EditVerifiedUser /> : <Navigate to="/" />}
+              element={(user && !isLoading && user.role === "Admin") ? <EditVerifiedUser /> : <Navigate to="/" />}
             />
 
             <Route
               path="/edit-item/:id"
-              element={user && !isLoading ? <EditItem /> : <Navigate to="/" />}
+              element={(user && !isLoading && (user.role === "Admin" || user.role === "Partsman")) ? <EditItem /> : <Navigate to="/" />}
             />
 
             <Route
               path='/admin-control-center'
-              element={user && !isLoading ? <AdminControlCenter /> : <Navigate to="/" />}
+              element={(user && !isLoading && user.role === "Admin") ? <AdminControlCenter /> : <Navigate to="/" />}
             />
 
           </Routes>
