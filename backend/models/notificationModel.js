@@ -19,7 +19,7 @@ const notificationSchema = new Schema({
         type: Date,
         default: Date.now
     }
-}, { discriminatorKey: 'notificationType' });
+}, { discriminatorKey: 'discriminator' });
 
 // Stock notification schema
 const stockNotificationSchema = new Schema({

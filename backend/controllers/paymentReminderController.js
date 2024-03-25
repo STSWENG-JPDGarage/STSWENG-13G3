@@ -15,7 +15,7 @@ const paymentReminderController = {
             await newPaymentReminder.save();
             res.status(201).json({ message: 'Payment reminder created successfully', paymentReminder: newPaymentReminder });
         } catch (error) {
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server error', message: error.message });
         }
     },
 
