@@ -132,7 +132,7 @@ const AddReminder = ({ show, handleClose }) => {
          if (response.ok) {
             console.log('Payment reminder added successfully');
             const responseData = await response.json();
-            handleAddNotification(responseData.paymentReminder._id);
+            handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
             alert('Payment reminder successfully added!')
          } else {
@@ -143,8 +143,8 @@ const AddReminder = ({ show, handleClose }) => {
       }
    };
 
-   // Handles adding restock notification to database
-   const handleAddNotification = async (id) => {
+   // Handles creating notification dueDate is within 7 days
+   const handleCreateNotification = async (id) => {
 
       // Check if due date is at least 7 days from today
       const currentDate = new Date();
