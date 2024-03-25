@@ -132,6 +132,7 @@ const AddReminder = ({ show, handleClose }) => {
          if (response.ok) {
             console.log('Payment reminder added successfully');
             handleClose();
+            alert('Payment reminder successfully added!')
          } else {
             console.error('Failed to add payment reminder:', response.statusText);
          }
