@@ -8,6 +8,8 @@ import React, { useState, useEffect } from 'react';
 const NotificationPanel = () => {
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
+  const [countNonArchive, setCountNonArchive] = useState(0);
+  const [countArchive, setCountArchive] = useState(0);
 
   // Mimic live-updates by fetching notifications every second
   useEffect(() => {
@@ -18,19 +20,39 @@ const NotificationPanel = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Fetches all non-archive and archive notifications
+  // Filters and divides the fetched notifications based on user.role and isArchive respectively
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`${DOMAIN}/notification/get`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch notifications');
+      // Get user details
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) { 
+
+        // Fetch all notifications
+        const response = await fetch(`${DOMAIN}/notification/get`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch notifications');
+        }
+        const notificationsData = await response.json(); 
+        notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
+
+        // Filter notifications based on user.role then assign notifications to archive and nonArchive
+        let nonArchive;
+        let archive;
+        if (user.role === 'Admin') {
+          nonArchive = notificationsData.filter(notification => notification.isArchive === "No");
+          archive = notificationsData.filter(notification => notification.isArchive === "Yes");
+        } else if (user.role === 'Secretary') {
+          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Payment"});
+          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Payment"});
+        } else if (user.role === 'Partsman') {
+          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Stock"});
+          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Stock"});
+        }
+        setNonArchiveNotifications(nonArchive);
+        setArchiveNotifications(archive);  
+        setCountNonArchive(nonArchive.length)
+        setCountArchive(archive.length)
       }
-      const notificationsData = await response.json(); 
-      notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
-      const nonArchiveNotifications = notificationsData.filter(notification => notification.isArchive === "No");
-      const archiveNotifications = notificationsData.filter(notification => notification.isArchive === "Yes");
-      setNonArchiveNotifications(nonArchiveNotifications);
-      setArchiveNotifications(archiveNotifications);  
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
@@ -93,8 +115,8 @@ const NotificationPanel = () => {
       id="uncontrolled-tab-example"
       className="mb-3 my-0 h-100"
       justify>
-      <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotifications.length}</Badge></span>}>
-        {nonArchiveNotifications.map((notification, index) => (
+      <Tab eventKey="updates" title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
+        {countNonArchive > 0 && nonArchiveNotifications.map((notification, index) => (
           <div key={index}>
             {notification.notificationType === 'Stock' && (
               <StockNotification 
@@ -119,8 +141,8 @@ const NotificationPanel = () => {
           </div>
         ))}
       </Tab>
-      <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotifications.length}</Badge></span>}>
-        {archiveNotifications.map((notification, index) => (
+      <Tab eventKey="archive" title={<span>Archive <Badge>{countArchive}</Badge></span>}>
+        {countArchive > 0 && archiveNotifications.map((notification, index) => (
           <div key={index}>
             {notification.notificationType === 'Stock' && (
               <StockNotification 

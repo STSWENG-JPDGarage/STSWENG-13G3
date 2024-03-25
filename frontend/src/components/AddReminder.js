@@ -131,12 +131,56 @@ const AddReminder = ({ show, handleClose }) => {
 
          if (response.ok) {
             console.log('Payment reminder added successfully');
+            const responseData = await response.json();
+            handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
+            alert('Payment reminder successfully added!')
          } else {
             console.error('Failed to add payment reminder:', response.statusText);
          }
       } catch (error) {
          console.error('Error adding payment reminder:', error);
+      }
+   };
+
+   // Handles creating notification dueDate is within 7 days
+   const handleCreateNotification = async (id) => {
+
+      // Check if due date is at least 7 days from today
+      const currentDate = new Date();
+      const midnightDueDate = new Date(dueDate);
+      currentDate.setHours(0, 0, 0, 0);
+      midnightDueDate.setHours(0, 0, 0, 0);
+
+      const differenceInTime = midnightDueDate.getTime() - currentDate.getTime();
+      const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+      if (differenceInDays <=7 && differenceInDays >=0) {         
+         try {
+            const response = await fetch(`${DOMAIN}/notification/create`, {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json'
+               },
+               body: JSON.stringify({ 
+                  notificationType : 'Payment', 
+                  isArchive : 'No', 
+                  paymentId : id, 
+                  clientName : clientName,
+                  paymentType : paymentType,
+                  paymentAmount : paymentAmount,
+                  dueDate : dueDate
+               })
+            });
+
+            if (response.ok) {
+               console.log('Notification created successfully');
+            } else {
+               console.error('Failed to create notification:', response.statusText);
+            }
+         } catch (error) {
+            console.error('Error creating notification:', error);
+         }
       }
    };
 
