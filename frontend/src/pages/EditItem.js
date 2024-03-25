@@ -170,10 +170,6 @@ const EditItem = () => {
             setError(null)
             console.log('inventory item edited:', json)
 
-            // For testing purposes
-            console.log('prevStockNumber = ', prevStockNumber)
-            console.log('currStockNumber = ', stockNumber)
-
             // Create restock notification if danger_zone/out_of_stock -> in_stock
             if (prevStockNumber <= 10 && stockNumber > 10) {
                 handleRestockNotification();

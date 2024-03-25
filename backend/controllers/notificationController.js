@@ -14,11 +14,11 @@ const notificationController = {
                 return res.status(400).json({ error: 'Invalid notification type' });
             }
             const savedNotification = await newNotification.save();
-            res.status(201).json(savedNotification);
+            res.status(201).json({ message: 'Notification created successfully', notification: savedNotification });
 
         } catch (error) {
-            console.error('Error adding notification:', error);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server error', message: error.message });
+            console.error('Failed to create notification:', error);
         }
     },
 
@@ -65,3 +65,31 @@ const notificationController = {
 };
 
 module.exports = notificationController;
+
+/*
+// FOR TESTING PURPOSES
+const req = {
+    body: {
+        notificationType: 'Stock',
+        isArchive: 'No',
+        itemId: '66006188ff7155984e32608e',
+        itemName: 'HAROLD',
+        stockRemaining: 123,
+        date: new Date()
+    }
+};
+
+const res = {
+    status: function(code) {
+        return this; // Returning res object for chaining
+    },
+    json: function(data) {
+        console.log(data); // Log the response
+    }
+};
+
+notificationController.createNotification(req, res)
+    .catch(error => {
+        console.error('Failed to create notification:', error);
+    });
+*/
