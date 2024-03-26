@@ -18,6 +18,8 @@ const NotificationPanel = () => {
   const [modalShowWarning, setModalShowWarning] = useState(false);
   const [modalShowSettings, setModalShowSettings] = useState(false);
   const [isUpdatesTab, setIsUpdatesTab] = useState(true);
+  const [nonArchiveAmount, setNonArchiveAmount] = useState(10);
+  const [archiveAmount, setArchiveAmount] = useState(10);
 
   const handleCloseWarning = () => setModalShowWarning(false);
   const handleCloseSettings = () => setModalShowSettings(false);
@@ -69,10 +71,12 @@ const NotificationPanel = () => {
           nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Stock"});
           archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Stock"});
         }
+        setCountNonArchive(nonArchive.length);
+        setCountArchive(archive.length);
+        nonArchive = nonArchive.slice(0, nonArchiveAmount);
+        archive = archive.slice(0, archiveAmount);
         setNonArchiveNotifications(nonArchive);
         setArchiveNotifications(archive);  
-        setCountNonArchive(nonArchive.length)
-        setCountArchive(archive.length)
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -171,6 +175,11 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
+        {countNonArchive > nonArchiveAmount &&
+          <p className="txt-main-dominant-red" 
+            style={{ textAlign: 'center', marginTop: '5px', textDecoration: 'underline',  cursor: 'pointer' }} 
+            onClick={() => { setNonArchiveAmount(prevAmount => prevAmount + 10); fetchNotifications(); }}>See More</p>
+        }
       </Tab>
       <Tab eventKey="archive" className='tab-content-scrollable' title={<span>Archive <Badge>{countArchive}</Badge></span>}>
         {countArchive > 0 && archiveNotifications.map((notification, index) => (
@@ -197,6 +206,11 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
+        {countArchive > archiveAmount &&
+          <p className="txt-main-dominant-red" 
+          style={{ textAlign: 'center', marginTop: '5px', textDecoration: 'underline',  cursor: 'pointer' }} 
+          onClick={() => { setArchiveAmount(prevAmount => prevAmount + 10); fetchNotifications(); }}>See More</p>
+        }
       </Tab>
       </Tabs>
       <div className='d-flex justify-content-end pe-3 pt-1'>
