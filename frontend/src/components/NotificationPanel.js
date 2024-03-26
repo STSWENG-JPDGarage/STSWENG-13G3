@@ -6,6 +6,7 @@ import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import AutoDeleteSettings from './AutoDeleteSettings';
+import ArchiveWarning from './ArchiveWarning';
 
 
 const NotificationPanel = () => {
