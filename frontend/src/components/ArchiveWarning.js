@@ -14,7 +14,7 @@ const ArchiveWarning = ({ show, handleClose }) => {
             <div className="d-flex justify-content-center"><img src="icon_exclamation.png"></img></div>
             <div className="d-flex justify-content-center"><h6>This feature is for notifications in the “Archive” tab only.</h6></div>
             <div className="d-flex justify-content-center">
-                <Button className="px-4 bg-white shadow txt-black border-0">Ok</Button>
+                <Button className="px-4 bg-white shadow txt-black border-0" onClick={handleClose}>Ok</Button>
             </div>
         </Modal.Body>
 

@@ -15,10 +15,22 @@ const NotificationPanel = () => {
   const [countNonArchive, setCountNonArchive] = useState(0);
   const [countArchive, setCountArchive] = useState(0);
 
-    const [modalShow, setModalShow] = useState(false);
+  const [modalShowWarning, setModalShowWarning] = useState(false);
+  const [modalShowSettings, setModalShowSettings] = useState(false);
+  const [isUpdatesTab, setIsUpdatesTab] = useState(true);
 
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
+  const handleCloseWarning = () => setModalShowWarning(false);
+  const handleCloseSettings = () => setModalShowSettings(false);
+  const handleShowWarning = () => setModalShowWarning(true);
+  const handleShowSettings = () => setModalShowSettings(true);
+
+  const handleSelect = (key) => {
+    if (key === 'updates'){
+      setIsUpdatesTab(true);
+    } else {
+      setIsUpdatesTab(false);
+    }
+  }
 
   // Mimic live-updates by fetching notifications every second
   useEffect(() => {
@@ -123,11 +135,13 @@ const NotificationPanel = () => {
       <h1 className='txt-20 fw-bold'>Notification</h1>
       <div>
         <Button className='bg-white p-0 border-0 m-0'><img src="filter.png" className="icon_md pe-2"/></Button>
-        <Button className='bg-white p-0 border-0 m-0' onClick={handleShow}><img src="delete_options.png" className="icon_md pe-1"/></Button>             
+        <Button className='bg-white p-0 border-0 m-0' onClick={() => isUpdatesTab===true ? handleShowWarning() : handleShowSettings() }><img src="delete_options.png" className="icon_md pe-1"/></Button>             
       </div>
-      <AutoDeleteSettings show={modalShow} handleClose={handleClose} />
+      <ArchiveWarning show={modalShowWarning} handleClose={handleCloseWarning} />
+      <AutoDeleteSettings show={modalShowSettings} handleClose={handleCloseSettings} />
     </div>
     <Tabs
+      onSelect={handleSelect}
       defaultActiveKey="updates"
       id="uncontrolled-tab-example"
       className=" my-0 tabs-full-height"

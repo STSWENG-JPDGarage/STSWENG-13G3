@@ -30,8 +30,8 @@ return(
             </Form.Group>
       </div>
       <div className=' d-flex justify-content-end pe-4 pb-4'>
-         <Button className="px-4 me-2 bg-search-gray border-0 txt-black"> Close</Button>
-         <Button className="px-4 bg-main-dominant-red border-0">Apply</Button>
+         <Button className="px-4 me-2 bg-search-gray border-0 txt-black" onClick={handleClose}>Close</Button>
+         <Button className="px-4 bg-main-dominant-red border-0" onClick={handleClose}>Apply</Button>
       </div>
    </Modal>
 
