@@ -14,6 +14,11 @@ const orderRoutes = require('./routes/order')
 
 // express app
 const app = express()
+
+app.use("/", (req, res) => {
+    res.send("Server is running.")
+});
+
 app.use(cors(
     {
         origin: "*", // only until the duration of deployment, since it may bring security risks, allows access from any origin
