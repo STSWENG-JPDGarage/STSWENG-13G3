@@ -87,7 +87,7 @@ const PaymentNotification = ({ clientName, paymentType, paymentAmount, dueDate, 
         <Row><p className='txt-14'>An {paymentType === "Outgoing" ? 'outgoing' : 'incoming'} payment {paymentType === "Outgoing" ? 'to' : 'from'} <b>{clientName}</b> for <b>{formatToPHP(paymentAmount)}</b> is due on <b>{formatDateToWords(dueDate)}</b>.</p></Row>
         <Row>
           <Col><p>{timeElapsed}</p></Col>
-          <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="w-25"/></Col>
+          <Col className='d-flex justify-content-end pe-3'><img src="icon_cart_.png" className="icon_sm"/></Col>
         </Row>
       </Toast.Body>
     </Toast>
