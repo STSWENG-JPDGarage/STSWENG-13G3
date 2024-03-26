@@ -3,11 +3,11 @@ let DOMAIN;
 const temp = ""
 
 if (temp === 'production') {
-    DOMAIN = "https://stsweng-13-backend-7huunhwho-enzzzoooos-projects.vercel.app";  // Production domain
+    DOMAIN = "https://jpdgarage-api.vercel.app";  // Production domain
 } else if (temp === 'preview') {
-    DOMAIN = "https://stsweng-13-backend-7huunhwho-enzzzoooos-projects.vercel.app";  // Development domain
+    DOMAIN = "https://jpdgarage-dev-api.vercel.app";  // Development domain
 } else {
-    DOMAIN = "https://stsweng-13-backend-7huunhwho-enzzzoooos-projects.vercel.app";  // Local testing domain
+    DOMAIN = "http://localhost:4000";  // Local testing domain
 }
 
 export { DOMAIN };
