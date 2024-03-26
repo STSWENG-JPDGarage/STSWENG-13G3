@@ -127,6 +127,7 @@ const Payments = () => {
             <SalesPaymentsOption />
             <Card className='p-4'>
                 <h1 className='fw-bold txt-subtitle-red txt-24'>Next Payment Due</h1>
+                <Button className="px-4 txt-main-dominant-red bg-white border-0 shadow-md"><img className="icon_sm" src="icon_danger.png"></img> CLICK TO SEE OVERDUE PAYMENTS</Button>
                 <Card className='txt-24 fw-bold bg-main-dominant-red py-3 px-4 txt-white shadow-sm border-0'>
                     {incomingPayments.length === 0 && outgoingPayments.length === 0 ? (
                         <div className='d-flex justify-content-between'>

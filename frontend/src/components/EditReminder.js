@@ -274,8 +274,8 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
          <Modal.Footer className="d-flex justify-content-between">
                <Button variant="success" onClick={() => { handleClose(); }}><img className="icon_sm text-left" src="icon_check.png"></img></Button>
             <div>
-               <Button variant="secondary" onClick={handleClose} className="px-4 me-2 bg-search-gray border-0 txt-black"> Close</Button>
-               <Button variant="danger" onClick={validateAllFields} className="px-4 bg-main-dominant-red border-0">Save Reminder</Button>
+               <Button onClick={handleClose} className="px-4 me-2 bg-search-gray border-0 txt-black"> Close</Button>
+               <Button onClick={validateAllFields} className="px-4 bg-main-dominant-red border-0">Save Reminder</Button>
             </div>
         </Modal.Footer>
       </Modal>
