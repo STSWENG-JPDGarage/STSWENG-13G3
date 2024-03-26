@@ -4,12 +4,21 @@ import Tabs from 'react-bootstrap/Tabs';
 import { StockNotification, PaymentNotification } from '../components/Notification';
 import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import AutoDeleteSettings from './AutoDeleteSettings';
+import ArchiveWarning from './ArchiveWarning';
+
 
 const NotificationPanel = () => {
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
   const [countNonArchive, setCountNonArchive] = useState(0);
   const [countArchive, setCountArchive] = useState(0);
+
+    const [modalShow, setModalShow] = useState(false);
+
+    const handleClose = () => setModalShow(false);
+    const handleShow = () => setModalShow(true);
 
   // Mimic live-updates by fetching notifications every second
   useEffect(() => {
@@ -109,15 +118,23 @@ const NotificationPanel = () => {
 
   // FRONTEND for notification panel
   return (
-    <Container className='bg-white py-4'>
-      <Tabs
+  <Container fluid className='bg-white pt-2 pb-0 notification_panel'>
+    <div className='d-flex justify-content-between p-1 pb-2'>
+      <h1 className='txt-20 fw-bold'>Notification</h1>
+      <div>
+        <Button className='bg-white p-0 border-0 m-0'><img src="filter.png" className="icon_md pe-2"/></Button>
+        <Button className='bg-white p-0 border-0 m-0' onClick={handleShow}><img src="delete_options.png" className="icon_md pe-1"/></Button>             
+      </div>
+      <AutoDeleteSettings show={modalShow} handleClose={handleClose} />
+    </div>
+    <Tabs
       defaultActiveKey="updates"
       id="uncontrolled-tab-example"
-      className="mb-3 my-0 h-100"
+      className=" my-0 tabs-full-height"
       justify>
-      <Tab eventKey="updates" title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
+      <Tab eventKey="updates" className='tab-content-scrollable' title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
         {countNonArchive > 0 && nonArchiveNotifications.map((notification, index) => (
-          <div key={index}>
+          <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
               <StockNotification 
                 itemName={notification.itemName} 
@@ -141,9 +158,9 @@ const NotificationPanel = () => {
           </div>
         ))}
       </Tab>
-      <Tab eventKey="archive" title={<span>Archive <Badge>{countArchive}</Badge></span>}>
+      <Tab eventKey="archive" className='tab-content-scrollable' title={<span>Archive <Badge>{countArchive}</Badge></span>}>
         {countArchive > 0 && archiveNotifications.map((notification, index) => (
-          <div key={index}>
+          <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
               <StockNotification 
                 itemName={notification.itemName} 
@@ -168,7 +185,10 @@ const NotificationPanel = () => {
         ))}
       </Tab>
       </Tabs>
-    </Container>
+      <div className='d-flex justify-content-end pe-3 pt-1'>
+        <a href="#" className='txt-main-dominant-red'>See More</a>
+      </div>
+  </Container>
   );
 };
 

@@ -172,6 +172,9 @@ a {
 .txt-24{
   font-size: 24px!important; /* fs-4 */
 }
+.txt-28{
+  font-size: 28px!important; /* fs-4 */
+}
 .txt-32{
   font-size: 32px!important; /* fs-3 */
 }
@@ -330,6 +333,22 @@ input[type=password]::-ms-clear
   height: 2vh;
 }
 
+.icon_md{
+  height: 2.5vh;
+}
+
 .rounded-full{
   border-radius: 50px;
+}
+
+.notification_panel{
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+.tab-content-scrollable{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: calc(100vh  - 100px);
 }
