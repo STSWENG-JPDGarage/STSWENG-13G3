@@ -9,6 +9,11 @@ const cartRoutes = require('./routes/cart')
 const orderRoutes = require('./routes/order')
 
 
+app.use("/", (req, res) => {
+    res.send("Server is running.")
+});
+
+
 // express app
 const app = express()
 app.use(cors(
