@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button';
 import React from 'react';
 import AddReminder from '../components/AddReminder';
 import EditReminder from '../components/EditReminder';
-import DeletePayment from '../components/DeletePayment';
 import { useState, useEffect } from 'react';
 import { DOMAIN } from '../config'
 
@@ -25,17 +24,11 @@ const Payments = () => {
     // State variables for frontend design
     const [modalShowAdd, setModalShowAdd] = useState(false);
     const [modalShowEdit, setModalShowEdit] = useState(false);
-
+    
     const handleCloseAdd = () => setModalShowAdd(false);
     const handleCloseEdit = () => setModalShowEdit(false);
     const handleShowAdd = () => setModalShowAdd(true);
     const handleShowEdit = () => setModalShowEdit(true);
-
-    const [modalShow, setModalShow] = useState(false);
-
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
-
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -218,9 +211,6 @@ const Payments = () => {
                         dueDate={editDueDate}
                     />
                 </div>
-                <Button variant="primary" onClick={handleShow}>Delete</Button>
-                
-                <DeletePayment show={modalShow} handleClose={handleClose} />
             </Card>
         </Container>
     </>
