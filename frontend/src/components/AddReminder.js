@@ -131,8 +131,8 @@ const AddReminder = ({ show, handleClose }) => {
 
          if (response.ok) {
             console.log('Payment reminder added successfully');
-            const responseData = await response.json();
-            handleCreateNotification(responseData.paymentReminder._id);
+            //const responseData = await response.json();
+            //handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
             alert('Payment reminder successfully added!')
          } else {
@@ -143,6 +143,7 @@ const AddReminder = ({ show, handleClose }) => {
       }
    };
 
+   /*
    // Handles creating notification dueDate is within 7 days
    const handleCreateNotification = async (id) => {
 
@@ -183,6 +184,7 @@ const AddReminder = ({ show, handleClose }) => {
          }
       }
    };
+   */
 
    return(
       <Modal 

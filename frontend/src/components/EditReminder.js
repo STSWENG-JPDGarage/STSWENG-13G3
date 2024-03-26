@@ -172,8 +172,8 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
 
          if (response.ok) {
             console.log('Payment reminder edited successfully');
-            const responseData = await response.json();
-            handleCreateNotification(responseData.paymentReminder._id);
+            //const responseData = await response.json();
+            //handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
             alert('Payment reminder successfully edited!')
          } else {
@@ -184,6 +184,7 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
       }
    };
 
+   /*
    // Handles creating notification dueDate is within 7 days
    const handleCreateNotification = async (id) => {
 
@@ -224,6 +225,7 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
          }
       }
    };
+   */
 
    return(
       <Modal 
