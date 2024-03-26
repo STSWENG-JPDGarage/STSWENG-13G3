@@ -2,9 +2,8 @@ import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import { DOMAIN } from '../config'
-import DeletePayment from './DeletePayment';
 
-const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymentType, dueDate }) => {
+const EditReminder = ({ show, handleClose, handleShowDelete, id, clientName, paymentAmount, paymentType, dueDate }) => {
    
    // State variables for payment reminder data
    const [newClientName, setNewClientName] = useState('');  
@@ -23,11 +22,6 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
    const [errorPaymentAmount, setErrorPaymentAmount] = useState('');
    const [errorPaymentType, setErrorPaymentType] = useState('');
    const [errorDueDate, setErrorDueDate] = useState('');
-
-   // State variable for delete modal
-   const [modalShowDelete, setModalShowDelete] = useState(false);
-   const handleCloseDelete = () => setModalShowDelete(false);
-   const handleShowDelete = () => setModalShowDelete(true);
 
    // Display the prefilled values of the input fields and blank error messages
    const setInitialValues = () => {
@@ -258,11 +252,6 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
          </Modal.Body>
          <Modal.Footer className="d-flex justify-content-between">
                <Button variant="success" onClick={handleShowDelete}><img className="icon_sm text-left" src="icon_check.png"></img></Button>
-               <DeletePayment 
-                  show={modalShowDelete} 
-                  handleClose={handleCloseDelete} 
-                  id={id}
-               />
             <div>
                <Button onClick={handleClose} className="px-4 me-2 bg-search-gray border-0 txt-black"> Close</Button>
                <Button onClick={validateAllFields} className="px-4 bg-main-dominant-red border-0">Save Reminder</Button>

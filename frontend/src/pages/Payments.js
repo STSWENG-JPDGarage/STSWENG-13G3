@@ -1,10 +1,11 @@
-import { Container, Card, Row, Col } from 'react-bootstrap'
+import { Container, Card } from 'react-bootstrap'
 import SalesPaymentsOption from '../components/SalesPaymentsOption';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
 import AddReminder from '../components/AddReminder';
 import EditReminder from '../components/EditReminder';
+import DeletePayment from '../components/DeletePayment';
 import { useState, useEffect } from 'react';
 import { DOMAIN } from '../config'
 
@@ -24,11 +25,14 @@ const Payments = () => {
     // State variables for frontend design
     const [modalShowAdd, setModalShowAdd] = useState(false);
     const [modalShowEdit, setModalShowEdit] = useState(false);
+    const [modalShowDelete, setModalShowDelete] = useState(false);
     
     const handleCloseAdd = () => setModalShowAdd(false);
     const handleCloseEdit = () => setModalShowEdit(false);
     const handleShowAdd = () => setModalShowAdd(true);
     const handleShowEdit = () => setModalShowEdit(true);
+    const handleCloseDelete = () => setModalShowDelete(false);
+    const handleShowDelete = () => setModalShowDelete(true);
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -204,11 +208,18 @@ const Payments = () => {
                     <EditReminder 
                         show={modalShowEdit} 
                         handleClose={handleCloseEdit} 
+                        handleShowDelete={handleShowDelete}
                         id={editId}
                         clientName={editClientName}
                         paymentAmount={editPaymentAmount}
                         paymentType={editPaymentType}
                         dueDate={editDueDate}
+                    />
+                    <DeletePayment 
+                        show={modalShowDelete} 
+                        handleClose={handleCloseDelete}
+                        handleCloseEdit={handleCloseEdit} 
+                        id={editId}
                     />
                 </div>
             </Card>

@@ -2,7 +2,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { DOMAIN } from '../config'
 
-const DeletePayment = ({ show, handleClose, id }) => {
+const DeletePayment = ({ show, handleClose, handleCloseEdit, id }) => {
 
     // Handles deleting payment reminder from the database
     const handleDeleteReminder = async () => {
@@ -16,8 +16,9 @@ const DeletePayment = ({ show, handleClose, id }) => {
 
         if (response.ok) {
             console.log('Payment reminder deleted successfully');
-            handleClose();
             alert('Payment reminder successfully deleted!');
+            handleClose();
+            handleCloseEdit();
         } else {
             console.error('Failed to delete payment reminder:', response.statusText);
         }
@@ -32,6 +33,7 @@ const DeletePayment = ({ show, handleClose, id }) => {
         onHide={handleClose}
         size="md w-48"
         aria-labelledby="contained-modal-title-vcenter"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
         centered
         >
         <Modal.Body>
