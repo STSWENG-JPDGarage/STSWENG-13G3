@@ -150,7 +150,7 @@ const NotificationPanel = () => {
       id="uncontrolled-tab-example"
       className=" my-0 tabs-full-height"
       justify>
-      <Tab eventKey="updates" className='tab-content-scrollable' title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
+      <Tab eventKey="updates" className='tab-content-scrollable' title={<span style={{ color: isUpdatesTab !== true ? '#FF5555' : '' }}>Updates <Badge bg="main-dominant-red">{countNonArchive}</Badge></span>}>
         {countNonArchive > 0 && nonArchiveNotifications.map((notification, index) => (
           <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
@@ -194,7 +194,7 @@ const NotificationPanel = () => {
           </div>
         }
       </Tab>
-      <Tab eventKey="archive" className='tab-content-scrollable' title={<span>Archive <Badge>{countArchive}</Badge></span>}>
+      <Tab eventKey="archive" className='tab-content-scrollable' title={<span style={{ color: isUpdatesTab !== false ? '#FF5555' : '' }}>Archive <Badge bg="main-dominant-red">{countArchive}</Badge></span>}>
         {countArchive > 0 && archiveNotifications.map((notification, index) => (
           <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
