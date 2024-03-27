@@ -38,10 +38,10 @@ const NotificationPanel = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchNotifications();
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [archiveAmount, nonArchiveAmount]);
 
   // Filters and divides the fetched notifications based on user.role and isArchive respectively
   const fetchNotifications = async () => {
@@ -175,10 +175,23 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
-        {countNonArchive > nonArchiveAmount &&
-          <p className="txt-main-dominant-red" 
-            style={{ textAlign: 'center', marginTop: '5px', textDecoration: 'underline',  cursor: 'pointer' }} 
-            onClick={() => { setNonArchiveAmount(prevAmount => prevAmount + 10); fetchNotifications(); }}>See More</p>
+        {countNonArchive > 10 && 
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px', marginBottom: '20px' }}>
+            <p className={nonArchiveAmount > 10 ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: nonArchiveAmount > 10 ? 'auto' : 'none',
+                opacity: nonArchiveAmount > 10 ? 1 : 0.5 }} 
+              onClick={() => { setNonArchiveAmount(nonArchiveAmount - 10); fetchNotifications() }}>See Less</p>
+            <p className={countNonArchive > nonArchiveAmount ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: countNonArchive > nonArchiveAmount ? 'auto' : 'none',
+                opacity: countNonArchive > nonArchiveAmount ? 1 : 0.5 }} 
+              onClick={() => { setNonArchiveAmount(nonArchiveAmount + 10); fetchNotifications() }}>See More</p>
+          </div>
         }
       </Tab>
       <Tab eventKey="archive" className='tab-content-scrollable' title={<span>Archive <Badge>{countArchive}</Badge></span>}>
@@ -206,10 +219,23 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
-        {countArchive > archiveAmount &&
-          <p className="txt-main-dominant-red" 
-          style={{ textAlign: 'center', marginTop: '5px', textDecoration: 'underline',  cursor: 'pointer' }} 
-          onClick={() => { setArchiveAmount(prevAmount => prevAmount + 10); fetchNotifications(); }}>See More</p>
+        {countArchive > 10 && 
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px', marginBottom: '20px' }}>
+            <p className={archiveAmount > 10 ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: archiveAmount > 10 ? 'auto' : 'none',
+                opacity: archiveAmount > 10 ? 1 : 0.5 }} 
+              onClick={() => { setArchiveAmount(archiveAmount - 10); fetchNotifications() }}>See Less</p>
+            <p className={countArchive > archiveAmount ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: countArchive > archiveAmount ? 'auto' : 'none',
+                opacity: countArchive > archiveAmount ? 1 : 0.5 }} 
+              onClick={() => { setArchiveAmount(archiveAmount + 10); fetchNotifications() }}>See More</p>
+          </div>
         }
       </Tab>
       </Tabs>
