@@ -1,4 +1,4 @@
-import { Container, Card, Row, Col } from 'react-bootstrap'
+import { Container, Card } from 'react-bootstrap'
 import SalesPaymentsOption from '../components/SalesPaymentsOption';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
@@ -25,17 +25,14 @@ const Payments = () => {
     // State variables for frontend design
     const [modalShowAdd, setModalShowAdd] = useState(false);
     const [modalShowEdit, setModalShowEdit] = useState(false);
-
+    const [modalShowDelete, setModalShowDelete] = useState(false);
+    
     const handleCloseAdd = () => setModalShowAdd(false);
     const handleCloseEdit = () => setModalShowEdit(false);
     const handleShowAdd = () => setModalShowAdd(true);
     const handleShowEdit = () => setModalShowEdit(true);
-
-    const [modalShow, setModalShow] = useState(false);
-
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
-
+    const handleCloseDelete = () => setModalShowDelete(false);
+    const handleShowDelete = () => setModalShowDelete(true);
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -211,16 +208,20 @@ const Payments = () => {
                     <EditReminder 
                         show={modalShowEdit} 
                         handleClose={handleCloseEdit} 
+                        handleShowDelete={handleShowDelete}
                         id={editId}
                         clientName={editClientName}
                         paymentAmount={editPaymentAmount}
                         paymentType={editPaymentType}
                         dueDate={editDueDate}
                     />
+                    <DeletePayment 
+                        show={modalShowDelete} 
+                        handleClose={handleCloseDelete}
+                        handleCloseEdit={handleCloseEdit} 
+                        id={editId}
+                    />
                 </div>
-                <Button variant="primary" onClick={handleShow}>Delete</Button>
-                
-                <DeletePayment show={modalShow} handleClose={handleClose} />
             </Card>
         </Container>
     </>
