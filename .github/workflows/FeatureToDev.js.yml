@@ -40,6 +40,6 @@ jobs:
       working-directory: ./frontend
 
     - name: Start frontend
-      run: npm start
+      run: npm start &
       working-directory: ./frontend
 
