@@ -1,11 +1,12 @@
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import {Button, Form } from 'react-bootstrap';
+import { DOMAIN } from '../config'
 
 const AutoDeleteSettings  = ({ show, handleClose }) => {
 
    // State variables for payment reminder data
-   const [numOfDays, setNumOfDays] = useState(7);  
+   const [numOfDays, setNumOfDays] = useState();  
 
    // State variables for storing whether the variables are currently valid
    const [isValidNumOfDays, setIsValidNumOfDays] = useState(0);
@@ -14,11 +15,33 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
    const [errorNumOfDays, setErrorNumOfDays] = useState('');
    
    const setInitialValues = () => {
-      // TODO: Set initial number of days based on the db
-      setNumOfDays(7);
+      getLastAutoDelete();
       setIsValidNumOfDays(0);
       setErrorNumOfDays('');
    }
+
+   // Handles getting the last auto-delete setting
+   const getLastAutoDelete = async () => {
+      try {
+         // Fetch all notifications
+         const response = await fetch(`${DOMAIN}/autoDelete/get`);
+         if (!response.ok) {
+            throw new Error('Failed to fetch the last auto-delete setting');
+         }
+         const autoDeletes = await response.json();
+        
+         // Sort auto-delete settings by _id in descending order
+         autoDeletes.sort((a, b) => {
+             return b._id - a._id;
+         });
+ 
+         // Get the last auto-delete setting
+         const lastAutoDelete = autoDeletes[0];
+         setNumOfDays(lastAutoDelete.numOfDays);
+      } catch (error) {
+         console.error('Error fetching last auto-delete setting:', error);
+       }
+   };
 
    // Validate numOfDays field on blur
    const validateField = () => {

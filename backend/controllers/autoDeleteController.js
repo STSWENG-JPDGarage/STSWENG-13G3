@@ -26,7 +26,7 @@ const autoDeleteController = {
             res.status(500).json({ error: 'Internal server error' });
         }
     },
-
+    
     // Retrieve a specific auto-delete setting by id
     getAutoDeleteById: async (req, res) => {
         try {
