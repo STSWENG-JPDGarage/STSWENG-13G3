@@ -7,6 +7,7 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
 
    // State variables for payment reminder data
    const [numOfDays, setNumOfDays] = useState();  
+   const [id, setId] = useState();
 
    // State variables for storing whether the variables are currently valid
    const [isValidNumOfDays, setIsValidNumOfDays] = useState(0);
@@ -29,7 +30,6 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
             throw new Error('Failed to fetch the auto-delete settings');
          }
          const autoDeletes = await response.json();
-         console.log(autoDeletes);
         
          // Sort auto-delete settings by _id in descending order
          autoDeletes.sort((a, b) => {
@@ -38,7 +38,7 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
  
          // Get the last auto-delete setting
          const lastAutoDelete = autoDeletes[0];
-         console.log(lastAutoDelete);
+         setId(lastAutoDelete._id);
          setNumOfDays(lastAutoDelete.numOfDays);
          
       } catch (error) {
@@ -67,16 +67,35 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
    const handleSubmit = () => {
       validateField();
       if (isValidNumOfDays === 1) {
-         handleUpdateNumOfDays();
-         alert('Number of days for automatic deletion of archived notifications has been updated!');
-         handleClose();
+         updateAutoDelete();
       }
    }
 
    // Handles updating numOfDays from the database
-   const handleUpdateNumOfDays = async () => {
-      // TODO: Logic for updating the db
-   }
+   const updateAutoDelete = async () => {
+      try {
+         const response = await fetch(`${DOMAIN}/autoDelete/update/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+               numOfDays : numOfDays,
+               lastUpdated : new Date()
+            })
+         });
+
+         if (response.ok) {
+            console.log('Auto delete setting edited successfully');
+            alert('Number of days for automatic deletion of archived notifications has been updated!');
+            handleClose();
+         } else {
+            console.error('Failed to edit auto delete setting:', response.statusText);
+         }
+      } catch (error) {
+         console.error('Error editing auto delete setting:', error);
+      }
+   };
 
    return(
       <Modal 
