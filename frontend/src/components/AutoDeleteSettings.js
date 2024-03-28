@@ -26,21 +26,24 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
          // Fetch all notifications
          const response = await fetch(`${DOMAIN}/autoDelete/get`);
          if (!response.ok) {
-            throw new Error('Failed to fetch the last auto-delete setting');
+            throw new Error('Failed to fetch the auto-delete settings');
          }
          const autoDeletes = await response.json();
+         console.log(autoDeletes);
         
          // Sort auto-delete settings by _id in descending order
          autoDeletes.sort((a, b) => {
-             return b._id - a._id;
+            return Number(b._id) - Number(a._id);
          });
  
          // Get the last auto-delete setting
          const lastAutoDelete = autoDeletes[0];
+         console.log(lastAutoDelete);
          setNumOfDays(lastAutoDelete.numOfDays);
+         
       } catch (error) {
          console.error('Error fetching last auto-delete setting:', error);
-       }
+      }
    };
 
    // Validate numOfDays field on blur
