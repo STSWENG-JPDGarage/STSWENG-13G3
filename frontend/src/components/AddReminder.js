@@ -134,7 +134,7 @@ const AddReminder = ({ show, handleClose }) => {
             //const responseData = await response.json();
             //handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
-            alert('Payment reminder successfully added!')
+            alert('Payment reminder successfully added!');
          } else {
             console.error('Failed to add payment reminder:', response.statusText);
          }
@@ -166,6 +166,7 @@ const AddReminder = ({ show, handleClose }) => {
                body: JSON.stringify({ 
                   notificationType : 'Payment', 
                   isArchive : 'No', 
+                  isDelete : 'No',
                   paymentId : id, 
                   clientName : clientName,
                   paymentType : paymentType,

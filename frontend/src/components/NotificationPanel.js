@@ -18,8 +18,8 @@ const NotificationPanel = () => {
   const [modalShowWarning, setModalShowWarning] = useState(false);
   const [modalShowSettings, setModalShowSettings] = useState(false);
   const [isUpdatesTab, setIsUpdatesTab] = useState(true);
-  const [nonArchiveAmount, setNonArchiveAmount] = useState(10);
-  const [archiveAmount, setArchiveAmount] = useState(10);
+  const [nonArchiveAmount, setNonArchiveAmount] = useState(10);   // amount of notifs to be displayed
+  const [archiveAmount, setArchiveAmount] = useState(10);         // amount of notifs to be displayed
 
   const handleCloseWarning = () => setModalShowWarning(false);
   const handleCloseSettings = () => setModalShowSettings(false);
@@ -56,23 +56,34 @@ const NotificationPanel = () => {
           throw new Error('Failed to fetch notifications');
         }
         const notificationsData = await response.json(); 
-        notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
 
-        // Filter notifications based on user.role then assign notifications to archive and nonArchive
-        let nonArchive;
-        let archive;
+        let active;      // notifications where isDeleted === "No"
+        let filtered;    // notifications filtered by user.role
+        let nonArchive;  // notifications where isArchive === "No"
+        let archive;     // notifications where isArchive === "Yes"
+
+        // Filter by isDeleted
+        active = notificationsData.filter(notification => notification.isDeleted === "No");
+
+        // Filter by user.role
         if (user.role === 'Admin') {
-          nonArchive = notificationsData.filter(notification => notification.isArchive === "No");
-          archive = notificationsData.filter(notification => notification.isArchive === "Yes");
+          filtered = active;
         } else if (user.role === 'Secretary') {
-          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Payment"});
-          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Payment"});
+          filtered = active.filter(notification => notification.notificationType === "Payment");
         } else if (user.role === 'Partsman') {
-          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Stock"});
-          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Stock"});
+          filtered = active.filter(notification => notification.notificationType === "Stock");
         }
+
+        // Sort by most recent first THEN group to nonArchive and archive
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        nonArchive = filtered.filter(notification => notification.isArchive === "No");
+        archive = filtered.filter(notification => notification.isArchive === "Yes");
+
+        // Count the number of notifications
         setCountNonArchive(nonArchive.length);
         setCountArchive(archive.length);
+
+        // Cut the number of notifications to be shown
         nonArchive = nonArchive.slice(0, nonArchiveAmount);
         archive = archive.slice(0, archiveAmount);
         setNonArchiveNotifications(nonArchive);
