@@ -1,9 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import NotificationPanel from '../NotificationPanel';
 import '@testing-library/jest-dom';
-import { StockNotification, PaymentNotification } from '../Notification'
-import { DOMAIN } from '../../config'
 
 
 const mockNotifications = [
@@ -64,7 +62,7 @@ describe('NotificationPanel', () => {
       Promise.resolve({
         ok: true,
         json: () => {
-          return Promise.resolve(mockNotifications.json());
+          return Promise.resolve(mockNotifications);
         },
       })
     );
@@ -75,10 +73,17 @@ describe('NotificationPanel', () => {
     Storage.prototype.getItem.mockRestore();
   });
 
-  test('renders payment and stock notifications', () => {
+  test('renders payment and stock notifications', async () => {
     render(<NotificationPanel/>);
     
+    await waitFor(() => {
+      return screen.getByText('CSARCH2 Client');
+    });
+
+    expect(screen.getByText('CSARCH2 Client')).toBeInTheDocument();
+
     screen.debug();
+
     //render(<PaymentNotification/>);
 
     // expect(screen.getByText('ITEM STOCK ALERT')).toBeInTheDocument(); // Item name
