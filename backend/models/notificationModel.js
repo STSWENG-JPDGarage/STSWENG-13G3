@@ -16,6 +16,11 @@ const notificationSchema = new Schema({
         default: 'No',
         required: true
     },
+    isArchiveDate: {
+        type: Date,
+        default: null,
+        required: false
+    },
     isDeleted: {
         type: String,
         enum: ['Yes', 'No'],

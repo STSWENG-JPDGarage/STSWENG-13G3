@@ -50,6 +50,7 @@ const PaymentNotificationScheduler = async () => {
                     body: JSON.stringify({ 
                         notificationType: 'Payment', 
                         isArchive: 'No', 
+                        isArchiveDate: null,
                         paymentId: payment._id, 
                         clientName: payment.clientName,
                         paymentType: payment.paymentType,
@@ -72,4 +73,67 @@ const PaymentNotificationScheduler = async () => {
     }
 };
 
-module.exports = PaymentNotificationScheduler;
+const AutoDeleteScheduler = async () => {
+    try {
+    // FETCH all auto-delete settings
+        const response = await fetch(`${DOMAIN}/autoDelete/get`);
+        if (response.ok) {
+            console.log('Auto delete settings successfully fetched');
+        } else {
+            console.error('Failed to fetch auto-delete settings', response.statusText);
+        }
+        const autoDeletes = await response.json();
+      
+        // Sort auto-delete settings by _id in descending order
+        autoDeletes.sort((a, b) => {
+            return Number(b._id) - Number(a._id);
+        });
+
+        // Get the numOfDays from the last auto-delete setting
+        const days = autoDeletes[0].numOfDays;
+
+    // FETCH all archived notifications
+        const response2 = await fetch(`${DOMAIN}/notification/get`);
+        if (response2.ok) {
+            console.log('Notifications successfully fetched');
+        } else {
+            console.error('Failed to fetch notifications', response2.statusText);
+        }
+        const notifications = await response2.json();
+        const archivedNotifications = notifications.filter(notification => notification.isArchive === "Yes");
+
+        // Get current date
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Set isDeleted = "Yes" if currentDate - isArchiveDate >= days
+        archivedNotifications.forEach(async (archivedNotification) => {
+            const isArchiveDate = new Date(archivedNotification.isArchiveDate);
+            isArchiveDate.setHours(0, 0, 0, 0);
+
+            const differenceInTime = currentDate.getTime() - isArchiveDate.getTime();
+            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+            if (differenceInDays >= days) {
+    // UPDATE isDeleted fields of the database
+                const response3 = await fetch(`${DOMAIN}/notification/update-isDeleted/${archivedNotification._id}`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ isDeleted : "Yes" })
+                }); 
+                if (response3.ok) {
+                    console.log('Archived notification successfully deleted');
+                } else {
+                    console.error('Failed to delete archived notification', response3.statusText);
+                }
+            }
+        });
+       
+    } catch (error) {
+        console.error('Error in auto-deleting archived notifications:', error);
+    }
+};
+
+module.exports = { PaymentNotificationScheduler, AutoDeleteScheduler };

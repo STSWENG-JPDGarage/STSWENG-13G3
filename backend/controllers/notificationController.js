@@ -37,9 +37,28 @@ const notificationController = {
     updateIsArchiveById: async (req, res) => {
         try {
             const { id } = req.params;
-            const { isArchive } = req.body;
+            const { isArchive, isArchiveDate } = req.body;
 
-            const updatedNotification = await Notification.findByIdAndUpdate(id, { isArchive }, { new: true });
+            const updatedNotification = await Notification.findByIdAndUpdate(id, { isArchive, isArchiveDate }, { new: true });
+
+            if (!updatedNotification) {
+                return res.status(404).json({ error: 'Notification not found' });
+            }
+
+            res.json(updatedNotification);
+        } catch (error) {
+            console.error('Error updating notification:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    // Controller function to update isDeleted of a notification
+    updateIsDeletedById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { isDeleted } = req.body;
+
+            const updatedNotification = await Notification.findByIdAndUpdate(id, { isDeleted }, { new: true });
 
             if (!updatedNotification) {
                 return res.status(404).json({ error: 'Notification not found' });
@@ -72,6 +91,8 @@ const req = {
     body: {
         notificationType: 'Stock',
         isArchive: 'No',
+        isArchiveDate: null,
+        isDeleted: 'No',
         itemId: '66006188ff7155984e32608e',
         itemName: 'HAROLD',
         stockRemaining: 123,

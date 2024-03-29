@@ -11,7 +11,7 @@ const paymentReminderRoutes = require('./routes/paymentReminder')
 const notificationRoutes = require('./routes/notification')
 const autoDeleteRoutes = require('./routes/autoDelete')
 const cron = require('node-cron');
-const PaymentNotificationScheduler = require('./scheduler');
+const { PaymentNotificationScheduler, AutoDeleteScheduler } = require('./scheduler');
 
 // express app
 const app = express()
@@ -60,6 +60,7 @@ mongoose.connect(MONGO_URI)
         cron.schedule('0 0 * * *', () => {
             console.log('Running scheduled task...');
             PaymentNotificationScheduler();
+            AutoDeleteScheduler();
         });
 
         // listen to port

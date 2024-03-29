@@ -166,6 +166,7 @@ const AddReminder = ({ show, handleClose }) => {
                body: JSON.stringify({ 
                   notificationType : 'Payment', 
                   isArchive : 'No', 
+                  isArchiveDate : null,
                   isDelete : 'No',
                   paymentId : id, 
                   clientName : clientName,

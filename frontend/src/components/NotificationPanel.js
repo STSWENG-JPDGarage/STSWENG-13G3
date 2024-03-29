@@ -125,13 +125,15 @@ const NotificationPanel = () => {
 
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
+      const currentDate = new Date();
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
+      const updatedIsArchiveDate = currentIsArchive === 'Yes' ? null : currentDate;
       const response = await fetch(`${DOMAIN}/notification/update-isArchive/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ isArchive: updatedIsArchive }) // Update isArchive status
+        body: JSON.stringify({ isArchive: updatedIsArchive, isArchiveDate: updatedIsArchiveDate }) // Update isArchive status
       });
       if (!response.ok) {
         throw new Error('Failed to close notification');

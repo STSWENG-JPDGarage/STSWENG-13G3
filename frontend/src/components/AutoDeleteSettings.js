@@ -24,7 +24,7 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
    // Handles getting the last auto-delete setting
    const getLastAutoDelete = async () => {
       try {
-         // Fetch all notifications
+         // Fetch all auto-delete settings
          const response = await fetch(`${DOMAIN}/autoDelete/get`);
          if (!response.ok) {
             throw new Error('Failed to fetch the auto-delete settings');
