@@ -13,11 +13,24 @@ const notificationSchema = new Schema({
     isArchive: {
         type: String,
         enum: ['Yes', 'No'],
+        default: 'No',
+        required: true
+    },
+    isArchiveDate: {
+        type: Date,
+        default: null,
+        required: false
+    },
+    isDeleted: {
+        type: String,
+        enum: ['Yes', 'No'],
+        default: 'No',
         required: true
     },
     date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     }
 }, { discriminatorKey: 'discriminator' });
 

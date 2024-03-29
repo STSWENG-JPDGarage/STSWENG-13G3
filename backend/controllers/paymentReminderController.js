@@ -29,16 +29,6 @@ const paymentReminderController = {
         }
     },
 
-    // Retrieve all payment reminders
-    getAllPaymentReminders: async (req, res) => {
-        try {
-            const paymentReminders = await PaymentReminder.find();
-            res.status(200).json(paymentReminders);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    },
-
     // Retrieve nondue payment reminders
     getNonDuePaymentReminders: async (req, res) => {
         try {

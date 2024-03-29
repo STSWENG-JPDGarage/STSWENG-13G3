@@ -186,6 +186,8 @@ const EditReminder = ({ show, handleClose, handleShowDelete, id, clientName, pay
                body: JSON.stringify({ 
                   notificationType : 'Payment', 
                   isArchive : 'No', 
+                  isArchiveDate : null,
+                  isDeleted : 'No',
                   paymentId : id, 
                   clientName : newClientName,
                   paymentType : newPaymentType,
