@@ -13,6 +13,12 @@ const autoDeleteSchema = new Schema({
         default: Date.now,
         required: true,
     },
+    isEnabled: {
+        type: String,
+        enum: ['Yes', 'No'],
+        default: 'Yes',
+        required: true
+    }
 })
 
 const autoDelete = mongoose.model('autoDelete', autoDeleteSchema)

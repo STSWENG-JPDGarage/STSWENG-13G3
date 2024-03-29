@@ -5,9 +5,10 @@ import { DOMAIN } from '../config'
 
 const AutoDeleteSettings  = ({ show, handleClose }) => {
 
-   // State variables for payment reminder data
+   // State variables for auto-delete data
    const [numOfDays, setNumOfDays] = useState();  
    const [id, setId] = useState();
+   const [isChecked, setIsChecked] = useState();
 
    // State variables for storing whether the variables are currently valid
    const [isValidNumOfDays, setIsValidNumOfDays] = useState(0);
@@ -41,8 +42,14 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
          setId(lastAutoDelete._id);
          setNumOfDays(lastAutoDelete.numOfDays);
          
+         if (lastAutoDelete.isEnabled === 'Yes') {
+            setIsChecked(true);
+         } else {
+            setIsChecked(false);
+         }
+
       } catch (error) {
-         console.error('Error fetching last auto-delete setting:', error);
+         console.error('Error fetching last auto-delete settings:', error);
       }
    };
 
@@ -74,6 +81,12 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
    // Handles updating numOfDays from the database
    const updateAutoDelete = async () => {
       try {
+         let isEnabled;
+         if (isChecked === true) {
+            isEnabled = "Yes";
+         } else {
+            isEnabled = "No";
+         }
          const response = await fetch(`${DOMAIN}/autoDelete/update/${id}`, {
             method: 'PUT',
             headers: {
@@ -81,19 +94,20 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
             },
             body: JSON.stringify({ 
                numOfDays : numOfDays,
-               lastUpdated : new Date()
+               lastUpdated : new Date(),
+               isEnabled : isEnabled
             })
          });
 
          if (response.ok) {
-            console.log('Auto delete setting edited successfully');
-            alert('Number of days for automatic deletion of archived notifications has been updated!');
+            console.log('Auto delete settings edited successfully');
+            alert('Auto delete settings of archived notifications has been updated!');
             handleClose();
          } else {
-            console.error('Failed to edit auto delete setting:', response.statusText);
+            console.error('Failed to edit auto delete settings:', response.statusText);
          }
       } catch (error) {
-         console.error('Error editing auto delete setting:', error);
+         console.error('Error editing auto delete settings:', error);
       }
    };
 
@@ -119,13 +133,27 @@ const AutoDeleteSettings  = ({ show, handleClose }) => {
                   step="1"
                   onChange={(e) => setNumOfDays(e.target.value)}
                   onBlur={validateField}
+                  disabled={!isChecked}
+                  style={isChecked === true ? { opacity: 1 } : { opacity: 0.5 }}
                />
             </Form.Group>
             <div className='ms-2 txt-main-dominant-red fst-italic fw-bold'> {errorNumOfDays} </div>
          </div>
-         <div className=' d-flex justify-content-end pe-4 pb-4 mt-3'>
-            <Button className="px-4 me-2 bg-search-gray border-0 txt-black" onClick={handleClose}>Close</Button>
-            <Button className="px-4 bg-main-dominant-red border-0" onClick={handleSubmit}>Apply</Button>
+         <div className='d-flex justify-content-center pb-4 mt-3'>
+            <div className="form-check form-switch pe-4">
+               <input 
+                  className="form-check-input" 
+                  type="checkbox" 
+                  id="autoDeleteCheckbox" 
+                  style={isChecked === true ? { color: '#FF5555'} : { }}
+                  checked={isChecked} 
+                  onChange={(e) => setIsChecked(e.target.checked)}/>
+               <label className="form-check-label" htmlFor="autoDeleteCheckbox">Enable auto-deletion</label>
+            </div>
+            <div className='ps-5'>
+               <Button className="px-4 me-2 bg-search-gray border-0 txt-black" onClick={handleClose}>Close</Button>
+               <Button className="px-4 bg-main-dominant-red border-0" onClick={handleSubmit}>Apply</Button>
+            </div>       
          </div>
       </Modal>
    );

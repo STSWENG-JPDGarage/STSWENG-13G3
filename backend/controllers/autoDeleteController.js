@@ -5,10 +5,11 @@ const autoDeleteController = {
     // Create new auto-delete settings
     createAutoDelete: async (req, res) => {
         try {
-            const { numOfDays, lastUpdated } = req.body;
+            const { numOfDays, lastUpdated, isEnabled } = req.body;
             const newAutoDelete = new AutoDelete({
                 numOfDays,
                 lastUpdated,
+                isEnabled
             });
             await newAutoDelete.save();
             res.status(201).json({ message: 'Auto delete setting created successfully', autoDelete: newAutoDelete });
@@ -43,10 +44,11 @@ const autoDeleteController = {
     // Update a specific auto-delete setting by ID
     updateAutoDeleteById: async (req, res) => {
         try {
-            const { numOfDays, lastUpdated } = req.body;
+            const { numOfDays, lastUpdated, isEnabled } = req.body;
             const updatedAutoDelete = await AutoDelete.findByIdAndUpdate(req.params.id, {
                 numOfDays,
-                lastUpdated
+                lastUpdated,
+                isEnabled
             }, { new: true });
             if (!updatedAutoDelete) {
                 return res.status(404).json({ error: 'Auto delete setting not found' });
