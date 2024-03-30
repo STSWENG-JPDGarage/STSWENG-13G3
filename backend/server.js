@@ -28,7 +28,7 @@ app.use("/", (req, res) => {
 
 app.use(cors(
     {
-        origin: "*", // only until the duration of deployment, since it may bring security risks, allows access from any origin
+        origin: "https://stsweng-13-backend.vercel.app", // only until the duration of deployment, since it may bring security risks, allows access from any origin
         methods: ["POST", "GET", "PATCH", "DELETE", "PUT"],
         credentials: true
     }
