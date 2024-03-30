@@ -150,6 +150,15 @@ cartSchema.methods.confirmOrder = async function () {
             // Deduct the ordered quantity from the inventory item
             inventoryItem.stockNumber = Math.max(0, inventoryItem.stockNumber - orderedQuantity);
 
+            // Update stockStatus
+            if (inventoryItem.stockNumber == 0) {
+                inventoryItem.stockStatus = 'Out of Stock';
+            } else if (inventoryItem.stockNumber <= 10) {
+                inventoryItem.stockStatus = 'Danger Zone';
+            } else {
+                inventoryItem.stockStatus = 'In Stock';
+            }
+
             // Save the changes to the inventory item
             await inventoryItem.save();
         }

@@ -46,7 +46,7 @@ db.once('open', async () => {
 
         if (newItem.stockNumber == 0) {
             newItem['stockStatus'] = 'Out of Stock'
-        } else if (newItem.stockNumber <= 5) {
+        } else if (newItem.stockNumber <= 10) {
             newItem['stockStatus'] = 'Danger Zone'
         } else {
             newItem['stockStatus'] = 'In Stock'

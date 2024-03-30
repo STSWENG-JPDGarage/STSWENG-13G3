@@ -63,6 +63,17 @@ const createInventoryItem = async (req, res) => {
     try {
 
         const inventoryItem = await InventoryItem.create({ partName, brand, motorModel, stockNumber, retailPrice, wholesalePrice })
+        
+        // update stock status
+        if (inventoryItem.stockNumber == 0) {
+            inventoryItem.stockStatus = 'Out of Stock';
+        } else if (inventoryItem.stockNumber <= 10) {
+            inventoryItem.stockStatus = 'Danger Zone';
+        } else {
+            inventoryItem.stockStatus = 'In Stock';
+        }
+        await inventoryItem.save();
+
         res.status(200).json(inventoryItem)
 
     } catch (error) {
@@ -105,9 +116,9 @@ const updateInventoryItemById = async(req, res) => {
         const updatedData = req.body; // Data to update, including stockNumber and stockStatus
 
         // Check if the updated stockNumber is 0, and if so, set stockStatus to 'Out of Stock'
-        if (updatedData.stockNumber === 0) {
+        if (updatedData.stockNumber == 0) {
             updatedData.stockStatus = 'Out of Stock'
-        } else if (updatedData.stockNumber <= 5) {
+        } else if (updatedData.stockNumber <= 10) {
             updatedData.stockStatus = 'Danger Zone'
         } else {
             updatedData.stockStatus = 'In Stock' 
