@@ -18,9 +18,13 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
+    const headers = {'Content-Type':'application/json',
+                    'Access-Control-Allow-Origin':'*',
+                    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+
     const response = await fetch(DOMAIN + '/users/login', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: JSON.stringify({ email, password })
     })
     const json = await response.json()
