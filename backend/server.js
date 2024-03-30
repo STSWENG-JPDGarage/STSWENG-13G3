@@ -13,8 +13,16 @@ const autoDeleteRoutes = require('./routes/autoDelete')
 const cron = require('node-cron');
 const { PaymentNotificationScheduler, AutoDeleteScheduler } = require('./scheduler');
 
+
+
+
 // express app
 const app = express()
+
+app.use("/", (req, res) => {
+    res.send("Server is running.")
+});
+
 app.use(cors(
     {
         origin: "*", // only until the duration of deployment, since it may bring security risks, allows access from any origin
