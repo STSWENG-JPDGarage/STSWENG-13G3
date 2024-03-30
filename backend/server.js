@@ -9,6 +9,12 @@ const cartRoutes = require('./routes/cart')
 const orderRoutes = require('./routes/order')
 const paymentReminderRoutes = require('./routes/paymentReminder')
 const notificationRoutes = require('./routes/notification')
+const autoDeleteRoutes = require('./routes/autoDelete')
+const cron = require('node-cron');
+const { PaymentNotificationScheduler, AutoDeleteScheduler } = require('./scheduler');
+
+
+
 
 
 
@@ -43,6 +49,7 @@ app.use('/cart', cartRoutes)
 app.use('/orders', orderRoutes)
 app.use('/paymentReminder', paymentReminderRoutes)
 app.use('/notification', notificationRoutes)
+app.use('/autoDelete', autoDeleteRoutes)
 
 let MONGO_URI = ""
 
@@ -59,6 +66,14 @@ if (temp === "production") {
 mongoose.connect(MONGO_URI)
     .then(() => {
         console.log('connected to database')
+
+        // start the scheduler
+        cron.schedule('0 0 * * *', () => {
+            console.log('Running scheduled task...');
+            PaymentNotificationScheduler();
+            AutoDeleteScheduler();
+        });
+
         // listen to port
         app.listen(process.env.PORT, () => {
             console.log('listening for requests on port', process.env.PORT)

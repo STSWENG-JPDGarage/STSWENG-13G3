@@ -4,21 +4,46 @@ import Tabs from 'react-bootstrap/Tabs';
 import { StockNotification, PaymentNotification } from '../components/Notification';
 import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import AutoDeleteSettings from './AutoDeleteSettings';
+import ArchiveWarning from './ArchiveWarning';
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const NotificationPanel = () => {
+  const { user } = useAuthContext();
+
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
   const [countNonArchive, setCountNonArchive] = useState(0);
   const [countArchive, setCountArchive] = useState(0);
 
+  const [modalShowWarning, setModalShowWarning] = useState(false);
+  const [modalShowSettings, setModalShowSettings] = useState(false);
+  const [isUpdatesTab, setIsUpdatesTab] = useState(true);
+  const [nonArchiveAmount, setNonArchiveAmount] = useState(10);   // amount of notifs to be displayed
+  const [archiveAmount, setArchiveAmount] = useState(10);         // amount of notifs to be displayed
+
+  const handleCloseWarning = () => setModalShowWarning(false);
+  const handleCloseSettings = () => setModalShowSettings(false);
+  const handleShowWarning = () => setModalShowWarning(true);
+  const handleShowSettings = () => setModalShowSettings(true);
+
+  const handleSelect = (key) => {
+    if (key === 'updates'){
+      setIsUpdatesTab(true);
+    } else {
+      setIsUpdatesTab(false);
+    }
+  }
+
   // Mimic live-updates by fetching notifications every second
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchNotifications();
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [archiveAmount, nonArchiveAmount]);
 
   // Filters and divides the fetched notifications based on user.role and isArchive respectively
   const fetchNotifications = async () => {
@@ -33,25 +58,38 @@ const NotificationPanel = () => {
           throw new Error('Failed to fetch notifications');
         }
         const notificationsData = await response.json(); 
-        notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
 
-        // Filter notifications based on user.role then assign notifications to archive and nonArchive
-        let nonArchive;
-        let archive;
+        let active;      // notifications where isDeleted === "No"
+        let filtered;    // notifications filtered by user.role
+        let nonArchive;  // notifications where isArchive === "No"
+        let archive;     // notifications where isArchive === "Yes"
+
+        // Filter by isDeleted
+        active = notificationsData.filter(notification => notification.isDeleted === "No");
+
+        // Filter by user.role
         if (user.role === 'Admin') {
-          nonArchive = notificationsData.filter(notification => notification.isArchive === "No");
-          archive = notificationsData.filter(notification => notification.isArchive === "Yes");
+          filtered = active;
         } else if (user.role === 'Secretary') {
-          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Payment"});
-          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Payment"});
+          filtered = active.filter(notification => notification.notificationType === "Payment");
         } else if (user.role === 'Partsman') {
-          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Stock"});
-          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Stock"});
+          filtered = active.filter(notification => notification.notificationType === "Stock");
         }
+
+        // Sort by most recent first THEN group to nonArchive and archive
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        nonArchive = filtered.filter(notification => notification.isArchive === "No");
+        archive = filtered.filter(notification => notification.isArchive === "Yes");
+
+        // Count the number of notifications
+        setCountNonArchive(nonArchive.length);
+        setCountArchive(archive.length);
+
+        // Cut the number of notifications to be shown
+        nonArchive = nonArchive.slice(0, nonArchiveAmount);
+        archive = archive.slice(0, archiveAmount);
         setNonArchiveNotifications(nonArchive);
         setArchiveNotifications(archive);  
-        setCountNonArchive(nonArchive.length)
-        setCountArchive(archive.length)
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -89,13 +127,15 @@ const NotificationPanel = () => {
 
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
+      const currentDate = new Date();
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
+      const updatedIsArchiveDate = currentIsArchive === 'Yes' ? null : currentDate;
       const response = await fetch(`${DOMAIN}/notification/update-isArchive/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ isArchive: updatedIsArchive }) // Update isArchive status
+        body: JSON.stringify({ isArchive: updatedIsArchive, isArchiveDate: updatedIsArchiveDate }) // Update isArchive status
       });
       if (!response.ok) {
         throw new Error('Failed to close notification');
@@ -109,15 +149,31 @@ const NotificationPanel = () => {
 
   // FRONTEND for notification panel
   return (
-    <Container className='bg-white py-4'>
-      <Tabs
+  <Container fluid className='bg-white pt-2 pb-0 notification_panel'>
+    <div className='d-flex justify-content-between p-1 pb-2'>
+      <h1 className='txt-20 fw-bold'>Notification</h1>
+      <div>
+        <Button className='bg-white p-0 border-0 m-0'><img src="filter.png" className="icon_md pe-2"/></Button>
+        <Button className='bg-white p-0 border-0 m-0' onClick={() => {
+          if ((user.role !== 'Admin' && user.role !== 'Secretary') || isUpdatesTab === true) {
+            handleShowWarning();
+          } else {
+            handleShowSettings();
+          }
+        }}><img src="delete_options.png" className="icon_md pe-1"/></Button>             
+      </div>
+      <ArchiveWarning show={modalShowWarning} handleClose={handleCloseWarning} />
+      <AutoDeleteSettings show={modalShowSettings} handleClose={handleCloseSettings} />
+    </div>
+    <Tabs
+      onSelect={handleSelect}
       defaultActiveKey="updates"
       id="uncontrolled-tab-example"
-      className="mb-3 my-0 h-100"
+      className=" my-0 tabs-full-height"
       justify>
-      <Tab eventKey="updates" title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
+      <Tab eventKey="updates" className='tab-content-scrollable' title={<span style={{ color: isUpdatesTab !== true ? '#FF5555' : '', whiteSpace: 'nowrap' }}>Updates <Badge bg="main-dominant-red">{countNonArchive}</Badge></span>}>
         {countNonArchive > 0 && nonArchiveNotifications.map((notification, index) => (
-          <div key={index}>
+          <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
               <StockNotification 
                 itemName={notification.itemName} 
@@ -140,10 +196,28 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
+        {countNonArchive > 10 && 
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px', marginBottom: '20px' }}>
+            <p className={nonArchiveAmount > 10 ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: nonArchiveAmount > 10 ? 'auto' : 'none',
+                opacity: nonArchiveAmount > 10 ? 1 : 0.5 }} 
+              onClick={() => { setNonArchiveAmount(nonArchiveAmount - 10); fetchNotifications() }}>See Less</p>
+            <p className={countNonArchive > nonArchiveAmount ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: countNonArchive > nonArchiveAmount ? 'auto' : 'none',
+                opacity: countNonArchive > nonArchiveAmount ? 1 : 0.5 }} 
+              onClick={() => { setNonArchiveAmount(nonArchiveAmount + 10); fetchNotifications() }}>See More</p>
+          </div>
+        }
       </Tab>
-      <Tab eventKey="archive" title={<span>Archive <Badge>{countArchive}</Badge></span>}>
+      <Tab eventKey="archive" className='tab-content-scrollable' title={<span style={{ color: isUpdatesTab !== false ? '#FF5555' : '', whiteSpace: 'nowrap' }}>Archive <Badge bg="main-dominant-red">{countArchive}</Badge></span>}>
         {countArchive > 0 && archiveNotifications.map((notification, index) => (
-          <div key={index}>
+          <div key={index} className='py-1'>
             {notification.notificationType === 'Stock' && (
               <StockNotification 
                 itemName={notification.itemName} 
@@ -166,9 +240,30 @@ const NotificationPanel = () => {
             )}
           </div>
         ))}
+        {countArchive > 10 && 
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px', marginBottom: '20px' }}>
+            <p className={archiveAmount > 10 ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: archiveAmount > 10 ? 'auto' : 'none',
+                opacity: archiveAmount > 10 ? 1 : 0.5 }} 
+              onClick={() => { setArchiveAmount(archiveAmount - 10); fetchNotifications() }}>See Less</p>
+            <p className={countArchive > archiveAmount ? "txt-main-dominant-red" : "txt-main-dominant-black"}
+              style={{ 
+                textDecoration: 'underline',  
+                cursor: 'pointer', 
+                pointerEvents: countArchive > archiveAmount ? 'auto' : 'none',
+                opacity: countArchive > archiveAmount ? 1 : 0.5 }} 
+              onClick={() => { setArchiveAmount(archiveAmount + 10); fetchNotifications() }}>See More</p>
+          </div>
+        }
       </Tab>
       </Tabs>
-    </Container>
+      <div className='d-flex justify-content-end pe-3 pt-1'>
+        <a href="#" className='txt-main-dominant-red'>See More</a>
+      </div>
+  </Container>
   );
 };
 

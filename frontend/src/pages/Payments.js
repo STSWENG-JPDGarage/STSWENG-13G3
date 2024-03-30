@@ -1,4 +1,4 @@
-import { Container, Card, Row, Col } from 'react-bootstrap'
+import { Container, Card } from 'react-bootstrap'
 import SalesPaymentsOption from '../components/SalesPaymentsOption';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
@@ -25,17 +25,14 @@ const Payments = () => {
     // State variables for frontend design
     const [modalShowAdd, setModalShowAdd] = useState(false);
     const [modalShowEdit, setModalShowEdit] = useState(false);
-
+    const [modalShowDelete, setModalShowDelete] = useState(false);
+    
     const handleCloseAdd = () => setModalShowAdd(false);
     const handleCloseEdit = () => setModalShowEdit(false);
     const handleShowAdd = () => setModalShowAdd(true);
     const handleShowEdit = () => setModalShowEdit(true);
-
-    const [modalShow, setModalShow] = useState(false);
-
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
-
+    const handleCloseDelete = () => setModalShowDelete(false);
+    const handleShowDelete = () => setModalShowDelete(true);
 
     // Mimic live-updates by fetching payment reminders every second
     useEffect(() => {
@@ -126,7 +123,11 @@ const Payments = () => {
         <Container className='main'>
             <SalesPaymentsOption />
             <Card className='p-4'>
+                <div className="d-flex justify-content-between">
                 <h1 className='fw-bold txt-subtitle-red txt-24'>Next Payment Due</h1>
+                <Button className="px-4 txt-main-dominant-red bg-white border-0 shadow"><img className="icon_sm" src="icon_danger.png"></img> CLICK TO SEE OVERDUE PAYMENTS</Button>
+                </div>
+                
                 <Card className='txt-24 fw-bold bg-main-dominant-red py-3 px-4 txt-white shadow-sm border-0'>
                     {incomingPayments.length === 0 && outgoingPayments.length === 0 ? (
                         <div className='d-flex justify-content-between'>
@@ -207,16 +208,20 @@ const Payments = () => {
                     <EditReminder 
                         show={modalShowEdit} 
                         handleClose={handleCloseEdit} 
+                        handleShowDelete={handleShowDelete}
                         id={editId}
                         clientName={editClientName}
                         paymentAmount={editPaymentAmount}
                         paymentType={editPaymentType}
                         dueDate={editDueDate}
                     />
+                    <DeletePayment 
+                        show={modalShowDelete} 
+                        handleClose={handleCloseDelete}
+                        handleCloseEdit={handleCloseEdit} 
+                        id={editId}
+                    />
                 </div>
-                <Button variant="primary" onClick={handleShow}>Delete</Button>
-                
-                <DeletePayment show={modalShow} handleClose={handleClose} />
             </Card>
         </Container>
     </>

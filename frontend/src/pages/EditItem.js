@@ -192,6 +192,8 @@ const EditItem = () => {
                 body: JSON.stringify({ 
                     notificationType : 'Stock', 
                     isArchive : 'No', 
+                    isArchiveDate : null, 
+                    isDeleted : 'No',
                     itemId : id, 
                     itemName : partName, 
                     stockRemaining : stockNumber

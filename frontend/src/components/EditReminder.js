@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
 import { DOMAIN } from '../config'
 
-const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymentType, dueDate }) => {
+const EditReminder = ({ show, handleClose, handleShowDelete, id, clientName, paymentAmount, paymentType, dueDate }) => {
    
    // State variables for payment reminder data
    const [newClientName, setNewClientName] = useState('');  
@@ -134,27 +134,6 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
    }
 
    // Handles editing payment reminder from the database
-   const handleDeleteReminder = async () => {
-      try {
-         const response = await fetch(`${DOMAIN}/paymentReminder/delete/${id}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-         });
-
-         if (response.ok) {
-            console.log('Payment reminder deleted successfully');
-            handleClose();
-         } else {
-            console.error('Failed to delete payment reminder:', response.statusText);
-         }
-      } catch (error) {
-         console.error('Error deleting payment reminder:', error);
-      }
-   };
-
-   // Handles editing payment reminder from the database
    const handleEditReminder = async () => {
       try {
          const response = await fetch(`${DOMAIN}/paymentReminder/update/${id}`, {
@@ -175,7 +154,7 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
             //const responseData = await response.json();
             //handleCreateNotification(responseData.paymentReminder._id);
             handleClose();
-            alert('Payment reminder successfully edited!')
+            alert('Payment reminder successfully edited!');
          } else {
             console.error('Failed to edit payment reminder:', response.statusText);
          }
@@ -207,6 +186,8 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
                body: JSON.stringify({ 
                   notificationType : 'Payment', 
                   isArchive : 'No', 
+                  isArchiveDate : null,
+                  isDeleted : 'No',
                   paymentId : id, 
                   clientName : newClientName,
                   paymentType : newPaymentType,
@@ -271,13 +252,12 @@ const EditReminder = ({ show, handleClose, id, clientName, paymentAmount, paymen
 
             </Form>
          </Modal.Body>
-         <Modal.Footer>
-            <Button variant="danger" onClick={() => { handleClose(); handleDeleteReminder(); alert('Payment reminder successfully deleted!');}}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-            </svg></Button>
-            <Button variant="secondary" onClick={handleClose} className="px-4 me-2"> Close</Button>
-            <Button variant="danger" onClick={validateAllFields} className="px-4">Save Reminder</Button>
+         <Modal.Footer className="d-flex justify-content-between">
+               <Button variant="success" onClick={handleShowDelete}><img className="icon_sm text-left" src="icon_check.png"></img></Button>
+            <div>
+               <Button onClick={handleClose} className="px-4 me-2 bg-search-gray border-0 txt-black"> Close</Button>
+               <Button onClick={validateAllFields} className="px-4 bg-main-dominant-red border-0">Save Reminder</Button>
+            </div>
         </Modal.Footer>
       </Modal>
    );

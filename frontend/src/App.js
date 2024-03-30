@@ -130,7 +130,7 @@ function App() {
           </Routes>
 
         </Col>
-        <Col sm={2} className='col-5 px-0 my-0'><NotificationPanel/></Col>
+        <Col sm={2} className='col-5 px-0 my-0'>{window.location.pathname !== '/' && <NotificationPanel/>}</Col>
         </Row>
         
       </BrowserRouter>
