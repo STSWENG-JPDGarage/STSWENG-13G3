@@ -5,14 +5,25 @@ const paymentReminderController = {
     // Create a new payment reminder
     createPaymentReminder: async (req, res) => {
         try {
-            const { clientName, price, dueDate } = req.body;
+            const { clientName, paymentType, paymentAmount, dueDate } = req.body;
             const newPaymentReminder = new PaymentReminder({
                 clientName,
-                price,
+                paymentType,
+                paymentAmount,
                 dueDate
             });
             await newPaymentReminder.save();
             res.status(201).json({ message: 'Payment reminder created successfully', paymentReminder: newPaymentReminder });
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error', message: error.message });
+        }
+    },
+
+    // Retrieve all payment reminders
+    getAllPaymentReminders: async (req, res) => {
+        try {
+            const paymentReminders = await PaymentReminder.find();
+            res.status(200).json(paymentReminders);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
         }
@@ -22,6 +33,20 @@ const paymentReminderController = {
     getAllPaymentReminders: async (req, res) => {
         try {
             const paymentReminders = await PaymentReminder.find();
+            res.status(200).json(paymentReminders);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    // Retrieve nondue payment reminders
+    getNonDuePaymentReminders: async (req, res) => {
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+    
+            const paymentReminders = await PaymentReminder.find({ dueDate: { $gte: today } });
+    
             res.status(200).json(paymentReminders);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
@@ -44,10 +69,11 @@ const paymentReminderController = {
     // Update a specific payment reminder by ID
     updatePaymentReminderById: async (req, res) => {
         try {
-            const { clientName, price, dueDate } = req.body;
+            const { clientName, paymentType, paymentAmount, dueDate } = req.body;
             const updatedPaymentReminder = await PaymentReminder.findByIdAndUpdate(req.params.id, {
                 clientName,
-                price,
+                paymentType,
+                paymentAmount,
                 dueDate
             }, { new: true });
             if (!updatedPaymentReminder) {
@@ -78,7 +104,8 @@ const paymentReminderController = {
 // Create a new payment reminder
 const newPaymentReminder = new PaymentReminder({
     clientName: 'Example Client',
-    price: 999,
+    paymentType: 'Incoming',
+    paymentAmount: 999,
     dueDate: new Date('2024-12-31')
 });
 // Save the to the database

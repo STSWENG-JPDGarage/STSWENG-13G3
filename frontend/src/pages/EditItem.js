@@ -19,13 +19,15 @@ const EditItem = () => {
     const [wholesalePrice, setWholesalePrice] = useState('')
     const [error, setError] = useState('')
 
-
     /* STATE VARIABLES FOR ERROR HANDLING */
     const [partNameError, setPartNameError] = useState('')
     const [brandError, setBrandError] = useState('')
     const [stockNumberError, setStockNumberError] = useState('')
     const [retailPriceError, setRetailPriceError] = useState('')
     const [wholesalePriceError, setWholesalePriceError] = useState('')
+
+    /* STATE VARIABLES FOR TRIGGERING RESTOCK NOTIFICAITON*/
+    const [prevStockNumber, setPrevStockNumber] = useState('')
 
     // for enabling the submit button when there's no error
     const [isValidPartName, setValidPartName] = useState(false)
@@ -97,6 +99,7 @@ const EditItem = () => {
             setRetailPrice(json.retailPrice)
             setWholesalePrice(json.wholesalePrice)
             setStockNumber(json.stockNumber)
+            setPrevStockNumber(json.stockNumber) // for restock notification
 
             setValidPartName(true)
             setValidBrand(true)
@@ -140,7 +143,6 @@ const EditItem = () => {
         console.log(retailPrice)
         console.log(wholesalePrice)
 
-
         let inventoryItem = {}
 
         if (validator.isEmpty(motorModel)) {
@@ -166,10 +168,46 @@ const EditItem = () => {
         }
         if (response.ok) {
             setError(null)
-            console.log('inventory item edited:', json) // print to console
+            console.log('inventory item edited:', json)
+
+            // Create restock notification if danger_zone/out_of_stock -> in_stock
+            if (prevStockNumber <= 10 && stockNumber > 10) {
+                handleRestockNotification();
+            }
+
+            // Update previous stock number tracker
+            setPrevStockNumber(stockNumber);
             alert('Item successfully edited!')
         }
     }
+
+    // Handles adding restock notification to database
+    const handleRestockNotification = async () => {
+        try {
+            const response = await fetch(`${DOMAIN}/notification/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    notificationType : 'Stock', 
+                    isArchive : 'No', 
+                    itemId : id, 
+                    itemName : partName, 
+                    stockRemaining : stockNumber
+                })
+            });
+
+            if (response.ok) {
+                console.log('Notification created successfully');
+            } else {
+                console.error('Failed to create notification:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error creating notification:', error);
+        }
+    };
+
     const debouncedHandlePartNameQuery = _.debounce(async (partNameValue, brandValue, callback) => {
         if (!user) {
             setError('You must be logged in.')

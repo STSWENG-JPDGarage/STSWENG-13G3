@@ -1,37 +1,58 @@
-import {Container, Badge} from 'react-bootstrap'
+import { Container, Badge } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Notification from '../components/Notification';
+import { StockNotification, PaymentNotification } from '../components/Notification';
 import { DOMAIN } from '../config'
 import React, { useState, useEffect } from 'react';
 
 const NotificationPanel = () => {
   const [nonArchiveNotifications, setNonArchiveNotifications] = useState([]);
   const [archiveNotifications, setArchiveNotifications] = useState([]);
+  const [countNonArchive, setCountNonArchive] = useState(0);
+  const [countArchive, setCountArchive] = useState(0);
 
+  // Mimic live-updates by fetching notifications every second
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // This function will be called every 3 seconds
       fetchNotifications();
     }, 1000);
 
-    // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 
-  // Fetches all non-archive and archive notifications
+  // Filters and divides the fetched notifications based on user.role and isArchive respectively
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`${DOMAIN}/notification/notifications-get`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch notifications');
+      // Get user details
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) { 
+
+        // Fetch all notifications
+        const response = await fetch(`${DOMAIN}/notification/get`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch notifications');
+        }
+        const notificationsData = await response.json(); 
+        notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
+
+        // Filter notifications based on user.role then assign notifications to archive and nonArchive
+        let nonArchive;
+        let archive;
+        if (user.role === 'Admin') {
+          nonArchive = notificationsData.filter(notification => notification.isArchive === "No");
+          archive = notificationsData.filter(notification => notification.isArchive === "Yes");
+        } else if (user.role === 'Secretary') {
+          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Payment"});
+          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Payment"});
+        } else if (user.role === 'Partsman') {
+          nonArchive = notificationsData.filter(notification => {return notification.isArchive === "No" && notification.notificationType === "Stock"});
+          archive = notificationsData.filter(notification => {return notification.isArchive === "Yes" && notification.notificationType === "Stock"});
+        }
+        setNonArchiveNotifications(nonArchive);
+        setArchiveNotifications(archive);  
+        setCountNonArchive(nonArchive.length)
+        setCountArchive(archive.length)
       }
-      const notificationsData = await response.json(); 
-      notificationsData.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort notifications (most recent first)
-      const nonArchiveNotifications = notificationsData.filter(notification => notification.isArchive === "No");
-      const archiveNotifications = notificationsData.filter(notification => notification.isArchive === "Yes");
-      setNonArchiveNotifications(nonArchiveNotifications);
-      setArchiveNotifications(archiveNotifications);  
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
@@ -69,7 +90,7 @@ const NotificationPanel = () => {
   const handleCloseNotification = async (notificationId, currentIsArchive) => {
     try {
       const updatedIsArchive = currentIsArchive === 'Yes' ? 'No' : 'Yes'; // Toggle isArchive status
-      const response = await fetch(`${DOMAIN}/notification/notifications-update/${notificationId}`, {
+      const response = await fetch(`${DOMAIN}/notification/update-isArchive/${notificationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -94,31 +115,59 @@ const NotificationPanel = () => {
       id="uncontrolled-tab-example"
       className="mb-3 my-0 h-100"
       justify>
-      <Tab eventKey="updates" title={<span>Updates <Badge>{nonArchiveNotifications.length}</Badge></span>}>
-        {nonArchiveNotifications.map((notification, index) => (
-          <Notification 
-            key={index} 
-            message={notification.message} 
-            stockRemaining={notification.stockRemaining}
-            timeElapsed={formatTimeElapsed(notification.date)}
-            isArchive={notification.isArchive}
-            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
-          />
+      <Tab eventKey="updates" title={<span>Updates <Badge>{countNonArchive}</Badge></span>}>
+        {countNonArchive > 0 && nonArchiveNotifications.map((notification, index) => (
+          <div key={index}>
+            {notification.notificationType === 'Stock' && (
+              <StockNotification 
+                itemName={notification.itemName} 
+                stockRemaining={notification.stockRemaining}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+            {notification.notificationType === 'Payment' && (
+              <PaymentNotification 
+                clientName={notification.clientName} 
+                paymentType={notification.paymentType}
+                paymentAmount={notification.paymentAmount}
+                dueDate={notification.dueDate}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+          </div>
         ))}
       </Tab>
-      <Tab eventKey="archive" title={<span>Archive <Badge>{archiveNotifications.length}</Badge></span>}>
-        {archiveNotifications.map((notification, index) => (
-          <Notification 
-            key={index} 
-            message={notification.message} 
-            stockRemaining={notification.stockRemaining}
-            timeElapsed={formatTimeElapsed(notification.date)}
-            isArchive={notification.isArchive}
-            onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
-            />
+      <Tab eventKey="archive" title={<span>Archive <Badge>{countArchive}</Badge></span>}>
+        {countArchive > 0 && archiveNotifications.map((notification, index) => (
+          <div key={index}>
+            {notification.notificationType === 'Stock' && (
+              <StockNotification 
+                itemName={notification.itemName} 
+                stockRemaining={notification.stockRemaining}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+            {notification.notificationType === 'Payment' && (
+              <PaymentNotification 
+                clientName={notification.clientName} 
+                paymentType={notification.paymentType}
+                paymentAmount={notification.paymentAmount}
+                dueDate={notification.dueDate}
+                timeElapsed={formatTimeElapsed(notification.date)}
+                isArchive={notification.isArchive}
+                onClose={() => handleCloseNotification(notification._id, notification.isArchive)}
+              />
+            )}
+          </div>
         ))}
       </Tab>
-    </Tabs>
+      </Tabs>
     </Container>
   );
 };

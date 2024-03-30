@@ -27,6 +27,8 @@
   --stocks-danger:#f0d735;
   --stocks-out: #eb5954;
   --search-gray: #D9D9D9;
+  --subtitle-red: #600000;
+  --payment-dark-green: #17221A;
 }
 
 body {
@@ -84,6 +86,12 @@ a {
 .txt-faded-text-button {
   color: var(--faded-text-button);
 }
+.txt-subtitle-red {
+  color: var(--subtitle-red)!important;
+}
+.txt-payment-dark-green {
+  color: var(--payment-dark-green)!important;
+}
 
 .accordion-button {
   background-color: var(--main-dominant-red)!important;
@@ -122,8 +130,6 @@ a {
 .bg-search-gray{
   background-color: var(--search-gray)!important;
 }
- 
-
 .bg-white{
   background-color: var(--white)!important;
 }
@@ -145,7 +151,15 @@ a {
 .bg-finances-positive{
   background-color: var(--finances-positive)!important;
 }
-
+.bg-icon-in-the-background{
+  background-color: var(--icon-in-the-background)!important;
+}
+.txt-10{
+  font-size: 10px!important; /* fs-6 */
+}
+.txt-12{
+  font-size: 12px!important; /* fs-6 */
+}
 .txt-14{
   font-size: 14px!important; /* fs-6 */
 }
@@ -154,6 +168,9 @@ a {
 }
 .txt-20{
   font-size: 20px!important; /* fs-4 */
+}
+.txt-24{
+  font-size: 24px!important; /* fs-4 */
 }
 .txt-32{
   font-size: 32px!important; /* fs-3 */
@@ -307,4 +324,12 @@ input[type=password]::-ms-clear
 
 .height-content{
   height: fit-content!important;
+}
+
+.icon_sm{
+  height: 2vh;
+}
+
+.rounded-full{
+  border-radius: 50px;
 }

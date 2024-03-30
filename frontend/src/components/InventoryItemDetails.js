@@ -26,8 +26,8 @@ const InventoryItemDetails = ({ inventoryItem, _id, showPrice }) => {
     const handleShow = () => setShow(true);
 
     const showEdit = () => {
-        if (user.role === "Admin") {
-            return <Button className="shadow rounded-2 col-4 mx-2 bg-white txt-black txt-16 border-0" onClick={navigateEditItem} disabled={user.role === "Partsman"}>Edit</Button>
+        if (user.role === "Admin" || user.role === "Partsman") {
+            return <Button className="shadow rounded-2 col-4 mx-2 bg-white txt-black txt-16 border-0" onClick={navigateEditItem} disabled={user.role === "Secretary"}>Edit</Button>
         }
     }
 
