@@ -18,9 +18,7 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
-    const headers = {'Content-Type':'application/json',
-                    'Access-Control-Allow-Origin':'*',
-                    'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+    const headers = {'Content-Type':'application/json'}
 
     const response = await fetch(DOMAIN + '/users/login', {
       method: 'POST',
