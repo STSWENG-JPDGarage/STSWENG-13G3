@@ -12,7 +12,7 @@ const notificationRoutes = require('./routes/notification')
 const autoDeleteRoutes = require('./routes/autoDelete')
 const cron = require('node-cron');
 const { PaymentNotificationScheduler, AutoDeleteScheduler } = require('./scheduler');
-
+const corsMiddleware = require('./corsMiddleware');
 
 
 
@@ -26,13 +26,7 @@ app.use("/", (req, res) => {
     res.send("Server is running.")
 });
 
-app.use(cors(
-    {
-        origin: "*", // only until the duration of deployment, since it may bring security risks, allows access from any origin
-        methods: ["POST", "GET", "PATCH", "DELETE", "PUT"],
-        credentials: true
-    }
-));
+app.use(corsMiddleware);
 
 // middleware
 app.use(express.json())
