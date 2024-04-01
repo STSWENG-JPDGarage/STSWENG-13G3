@@ -22,11 +22,11 @@ const corsMiddleware = require('./middleware/cors');
 // express app
 const app = express()
 
+app.use(corsMiddleware);
+
 app.use("/", (req, res) => {
     res.send("Server is running.")
 });
-
-app.use(corsMiddleware);
 
 // middleware
 app.use(express.json())
