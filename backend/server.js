@@ -12,7 +12,7 @@ const notificationRoutes = require('./routes/notification')
 const autoDeleteRoutes = require('./routes/autoDelete')
 const cron = require('node-cron');
 const { PaymentNotificationScheduler, AutoDeleteScheduler } = require('./scheduler');
-const corsMiddleware = require('./middleware/corsMiddleware');
+const corsMiddleware = require('./middleware/cors');
 
 
 
