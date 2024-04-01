@@ -24,11 +24,6 @@ const app = express()
 
 app.use(corsMiddleware);
 
-app.use("/", (req, res) => {
-    console.log("I WORK!")
-});
-
-// middleware
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -75,4 +70,9 @@ mongoose.connect(MONGO_URI)
     })
     .catch((err) => {
         console.log(err)
-    }) 
+    });
+
+    app.use("/", (req, res) => {
+        res.send("Server is running.")
+        res.json({ message: "test"});
+    });
