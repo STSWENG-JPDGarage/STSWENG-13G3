@@ -25,7 +25,7 @@ const app = express()
 app.use(corsMiddleware);
 
 app.use("/", (req, res) => {
-    res.send("Server is running.")
+    console.log("I WORK!")
 });
 
 // middleware
